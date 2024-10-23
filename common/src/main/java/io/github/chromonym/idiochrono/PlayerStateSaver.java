@@ -14,15 +14,16 @@ import net.minecraft.world.World;
 
 public class PlayerStateSaver extends PersistentState {
 
-    public HashMap<UUID, PlayerData> players = new HashMap<>();
+    public HashMap<UUID, PlayerTimeData> players = new HashMap<>();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, WrapperLookup registryLookup) {
         NbtCompound playersNbt = new NbtCompound();
         players.forEach((uuid, playerData) -> {
             NbtCompound playerNbt = new NbtCompound();
-            playerNbt.putLong("playerTimeOffset", playerData.playerTimeOffset);
-            playerNbt.putLong("playerTimeStatic", playerData.playerTimeStatic);
+            playerNbt.putLong("playerTimeOffset", playerData.offset);
+            playerNbt.putFloat("playerTickrate", playerData.tickrate);
+            playerNbt.putFloat("playerTickCounter", playerData.counter);
             playersNbt.put(uuid.toString(), playerNbt);
         });
         nbt.put("players", playersNbt);
@@ -33,9 +34,10 @@ public class PlayerStateSaver extends PersistentState {
         PlayerStateSaver state = new PlayerStateSaver();
         NbtCompound playersNbt = tag.getCompound("players");
         playersNbt.getKeys().forEach(key -> {
-            PlayerData playerData = new PlayerData();
-            playerData.playerTimeOffset = playersNbt.getCompound(key).getLong("playerTimeOffset");
-            playerData.playerTimeStatic = playersNbt.getCompound(key).getLong("playerTimeStatic");
+            PlayerTimeData playerData = new PlayerTimeData();
+            playerData.offset = playersNbt.getCompound(key).getLong("playerTimeOffset");
+            playerData.tickrate = playersNbt.getCompound(key).getFloat("playerTickrate");
+            playerData.counter = playersNbt.getCompound(key).getFloat("playerTickCounter");
             UUID uuid = UUID.fromString(key);
             state.players.put(uuid, playerData);
         });
@@ -52,9 +54,9 @@ public class PlayerStateSaver extends PersistentState {
         return state;
     }
 
-    public static PlayerData getPlayerState(LivingEntity player) {
+    public static PlayerTimeData getPlayerState(LivingEntity player) {
         PlayerStateSaver serverState = getServerState(player.getWorld().getServer());
-        PlayerData playerState = serverState.players.computeIfAbsent(player.getUuid(), uuid -> new PlayerData());
+        PlayerTimeData playerState = serverState.players.computeIfAbsent(player.getUuid(), uuid -> new PlayerTimeData());
         return playerState;
     }
 }

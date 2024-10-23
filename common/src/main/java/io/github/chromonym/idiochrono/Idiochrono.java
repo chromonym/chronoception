@@ -3,11 +3,15 @@ package io.github.chromonym.idiochrono;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.LongArgumentType;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.PlayerEvent;
+import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -27,45 +31,37 @@ public final class Idiochrono {
 
     public static void init() {
         PlayerEvent.PLAYER_JOIN.register((player) -> {
-            PlayerData playerState = PlayerStateSaver.getPlayerState(player);
-            RegistryByteBuf data = new RegistryByteBuf(Unpooled.buffer(), player.getRegistryManager());
-            data.writeLong(playerState.playerTimeOffset);
-            data.writeLong(playerState.playerTimeStatic);
-            NetworkManager.sendToPlayer(player, INITIAL_SYNC, data);
-            // TODO set up client side logic for this
+            syncPlayerTimes(player, true);
         });
         CommandRegistrationEvent.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(literal("idiochrono")
                 .then(argument("player", EntityArgumentType.player())
-                    .then(argument("static", BoolArgumentType.bool())
+                    .then(argument("rate", BoolArgumentType.bool())
                         .executes(context -> {
-                            long playerTime;
-                            PlayerData playerState = PlayerStateSaver.getPlayerState(EntityArgumentType.getPlayer(context, "player"));
-                            if (BoolArgumentType.getBool(context, "static")) {
-                                playerTime = playerState.playerTimeStatic;
-                                context.getSource().sendFeedback(() -> Text.literal("Static Time: %s".formatted(playerTime)), false);
+                            PlayerTimeData playerState = PlayerStateSaver.getPlayerState(EntityArgumentType.getPlayer(context, "player"));
+                            if (BoolArgumentType.getBool(context, "rate")) {
+                                float playerTime = playerState.tickrate;
+                                context.getSource().sendFeedback(() -> Text.literal("Tick rate: %s".formatted(playerTime)), false);
                             } else {
-                                playerTime = playerState.playerTimeOffset;
+                                long playerTime = playerState.offset;
                                 context.getSource().sendFeedback(() -> Text.literal("Offset Time: %s".formatted(playerTime)), false);
                             }
-                            return (int)playerTime;
+                            syncPlayerTimes(EntityArgumentType.getPlayer(context, "player"), false);
+                            return 1;
                         })
-                        .then(argument("new_value",LongArgumentType.longArg())
+                        .then(argument("new_value",FloatArgumentType.floatArg())
                             .requires(source -> source.hasPermissionLevel(2))
                             .executes(context -> {
                                 ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
-                                PlayerData playerState = PlayerStateSaver.getPlayerState(player);
-                                if (BoolArgumentType.getBool(context, "static")) {
-                                    playerState.playerTimeStatic = LongArgumentType.getLong(context, "new_value");
-                                    context.getSource().sendFeedback(() -> Text.literal("Updated static time to %s".formatted(playerState.playerTimeStatic)), true);
+                                PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+                                if (BoolArgumentType.getBool(context, "rate")) {
+                                    playerState.tickrate = FloatArgumentType.getFloat(context, "new_value");
+                                    context.getSource().sendFeedback(() -> Text.literal("Updated tick rate to %s".formatted(playerState.tickrate)), true);
                                 } else {
-                                    playerState.playerTimeOffset = LongArgumentType.getLong(context, "new_value");
-                                    context.getSource().sendFeedback(() -> Text.literal("Updated time offset to %s".formatted(playerState.playerTimeOffset)), true);
+                                    playerState.offset = (long)FloatArgumentType.getFloat(context, "new_value");
+                                    context.getSource().sendFeedback(() -> Text.literal("Updated time offset to %s".formatted(playerState.offset)), true);
                                 }
-                                RegistryByteBuf data = new RegistryByteBuf(Unpooled.buffer(), player.getRegistryManager());
-                                data.writeLong(playerState.playerTimeOffset);
-                                data.writeLong(playerState.playerTimeStatic);
-                                NetworkManager.sendToPlayer(player, PLAYER_TIME_MODIFIED, data);
+                                syncPlayerTimes(player, false);
                                 return 1;
                             })
                         )
@@ -73,5 +69,31 @@ public final class Idiochrono {
                 )
             );
         });
+        TickEvent.SERVER_PRE.register((server) -> {
+            //server.getPlayerManager().getPlayers().forEach((player) -> {
+            //    PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+            //    playerState.counter += playerState.tickrate;
+            //    playerState.offset += (int)playerState.counter - 1;
+            //    playerState.counter -= (float)((int)playerState.counter);
+            //});
+            PlayerStateSaver playerStateSaver = PlayerStateSaver.getServerState(server);
+            playerStateSaver.players.forEach((uuid, playerData) -> {
+                playerData.counter += playerData.tickrate;
+                playerData.offset += (int)playerData.counter - 1;
+                playerData.counter -= (float)((int)playerData.counter);
+            });
+        });
+    }
+    public static void syncPlayerTimes(ServerPlayerEntity player, boolean instant) {
+        PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+        RegistryByteBuf data = new RegistryByteBuf(Unpooled.buffer(), player.getRegistryManager());
+        data.writeLong(playerState.offset);
+        data.writeFloat(playerState.tickrate);
+        data.writeFloat(playerState.counter);
+        if (instant) {
+            NetworkManager.sendToPlayer(player, INITIAL_SYNC, data);
+        } else {
+            NetworkManager.sendToPlayer(player, PLAYER_TIME_MODIFIED, data);
+        }
     }
 }
