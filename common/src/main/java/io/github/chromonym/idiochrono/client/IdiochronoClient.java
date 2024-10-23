@@ -13,8 +13,14 @@ public class IdiochronoClient {
             PlayerEntity player = context.getPlayer();
             playerData.playerTimeOffset = buf.readLong();
             playerData.playerTimeStatic = buf.readLong();
+            Idiochrono.LOGGER.info("Initial player times - Offset: %s, Static: %s".formatted(playerData.playerTimeOffset, playerData.playerTimeStatic));
+        });
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, Idiochrono.PLAYER_TIME_MODIFIED, (buf, context) -> {
+            PlayerEntity player = context.getPlayer();
+            playerData.playerTimeOffset = buf.readLong();
+            playerData.playerTimeStatic = buf.readLong();
             Idiochrono.LOGGER.info(Long.toString(playerData.playerTimeOffset));
-            Idiochrono.LOGGER.info(Long.toString(playerData.playerTimeStatic));
+            Idiochrono.LOGGER.info("Player times updated - Offset: %s, Static: %s".formatted(playerData.playerTimeOffset, playerData.playerTimeStatic));
         });
     }
 }

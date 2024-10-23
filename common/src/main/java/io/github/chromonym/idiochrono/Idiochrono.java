@@ -21,17 +21,11 @@ public final class Idiochrono {
     public static final String MOD_ID = "idiochrono";
 
     public static final Identifier INITIAL_SYNC = Identifier.of(MOD_ID, "initial_sync");
+    public static final Identifier PLAYER_TIME_MODIFIED = Identifier.of(MOD_ID, "player_time_modified");
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static void init() {
-        /*
-         * NetworkManager.registerReceiver(NetworkManager.Side.S2C, INITIAL_SYNC, (buf, context) -> {
-            PlayerEntity player = context.getPlayer();
-            long playerTimeOffset = buf.readLong();
-            long playerTimeStatic = buf.readLong();
-        });
-         */
         PlayerEvent.PLAYER_JOIN.register((player) -> {
             PlayerData playerState = PlayerStateSaver.getPlayerState(player);
             RegistryByteBuf data = new RegistryByteBuf(Unpooled.buffer(), player.getRegistryManager());
@@ -71,7 +65,7 @@ public final class Idiochrono {
                                 RegistryByteBuf data = new RegistryByteBuf(Unpooled.buffer(), player.getRegistryManager());
                                 data.writeLong(playerState.playerTimeOffset);
                                 data.writeLong(playerState.playerTimeStatic);
-                                NetworkManager.sendToPlayer(player, INITIAL_SYNC, data);
+                                NetworkManager.sendToPlayer(player, PLAYER_TIME_MODIFIED, data);
                                 return 1;
                             })
                         )
