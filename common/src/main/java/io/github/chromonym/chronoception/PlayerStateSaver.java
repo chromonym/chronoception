@@ -21,9 +21,9 @@ public class PlayerStateSaver extends PersistentState {
         NbtCompound playersNbt = new NbtCompound();
         players.forEach((uuid, playerData) -> {
             NbtCompound playerNbt = new NbtCompound();
-            playerNbt.putLong("playerTimeOffset", playerData.offset);
-            playerNbt.putFloat("playerTickrate", playerData.tickrate);
-            playerNbt.putFloat("playerTickCounter", playerData.counter);
+            playerNbt.putDouble("playerTimeOffset", playerData.offset);
+            playerNbt.putDouble("playerTickrate", playerData.tickrate);
+            playerNbt.putDouble("playerBaseTickrate", playerData.baseTickrate);
             playersNbt.put(uuid.toString(), playerNbt);
         });
         nbt.put("players", playersNbt);
@@ -35,9 +35,9 @@ public class PlayerStateSaver extends PersistentState {
         NbtCompound playersNbt = tag.getCompound("players");
         playersNbt.getKeys().forEach(key -> {
             PlayerTimeData playerData = new PlayerTimeData();
-            playerData.offset = playersNbt.getCompound(key).getLong("playerTimeOffset");
-            playerData.tickrate = playersNbt.getCompound(key).getFloat("playerTickrate");
-            playerData.counter = playersNbt.getCompound(key).getFloat("playerTickCounter");
+            playerData.offset = playersNbt.getCompound(key).getDouble("playerTimeOffset");
+            playerData.tickrate = playersNbt.getCompound(key).getDouble("playerTickrate");
+            playerData.baseTickrate = playersNbt.getCompound(key).getDouble("playerBaseTickrate");
             UUID uuid = UUID.fromString(key);
             state.players.put(uuid, playerData);
         });

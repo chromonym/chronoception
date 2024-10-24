@@ -1,7 +1,7 @@
 package io.github.chromonym.chronoception;
 
 public class PlayerTimeData {
-    public long offset = 0L;
-    public float tickrate = 1f;
-    public float counter = 0f;
+    public double offset = 0.0;
+    public double tickrate = 1.0;
+    public double baseTickrate = 1.0;
 }
