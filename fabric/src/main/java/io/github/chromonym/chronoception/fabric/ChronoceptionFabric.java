@@ -1,10 +1,9 @@
-package io.github.chromonym.idiochrono.fabric;
+package io.github.chromonym.chronoception.fabric;
 
+import io.github.chromonym.chronoception.Chronoception;
 import net.fabricmc.api.ModInitializer;
 
-import io.github.chromonym.idiochrono.Idiochrono;
-
-public final class IdiochronoFabric implements ModInitializer {
+public final class ChronoceptionFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         // This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -12,6 +11,6 @@ public final class IdiochronoFabric implements ModInitializer {
         // Proceed with mild caution.
 
         // Run our common setup.
-        Idiochrono.init();
+        Chronoception.init();
     }
 }

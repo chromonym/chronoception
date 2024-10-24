@@ -1,4 +1,4 @@
-package io.github.chromonym.idiochrono;
+package io.github.chromonym.chronoception;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -49,7 +49,7 @@ public class PlayerStateSaver extends PersistentState {
     
     public static PlayerStateSaver getServerState(MinecraftServer server) {
         PersistentStateManager persistentStateManager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
-        PlayerStateSaver state = persistentStateManager.getOrCreate(type, Idiochrono.MOD_ID);
+        PlayerStateSaver state = persistentStateManager.getOrCreate(type, Chronoception.MOD_ID);
         state.markDirty();
         return state;
     }

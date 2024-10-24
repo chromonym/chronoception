@@ -1,4 +1,4 @@
-package io.github.chromonym.idiochrono;
+package io.github.chromonym.chronoception;
 
 public class PlayerTimeData {
     public long offset = 0L;

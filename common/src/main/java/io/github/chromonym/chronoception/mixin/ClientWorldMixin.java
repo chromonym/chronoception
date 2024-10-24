@@ -1,4 +1,4 @@
-package io.github.chromonym.idiochrono.mixin;
+package io.github.chromonym.chronoception.mixin;
 
 import java.util.function.Supplier;
 
@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import io.github.chromonym.idiochrono.client.IdiochronoClient;
+import io.github.chromonym.chronoception.client.ChronoceptionClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKey;
@@ -29,11 +29,11 @@ public abstract class ClientWorldMixin extends World {
 
     @Override
     public long getTimeOfDay() {
-        return super.getTimeOfDay() + IdiochronoClient.playerData.offset;
+        return super.getTimeOfDay() + ChronoceptionClient.playerData.offset;
     }
 
     @Override
     public long getLunarTime() {
-        return super.getLunarTime() + IdiochronoClient.playerData.offset;
+        return super.getLunarTime() + ChronoceptionClient.playerData.offset;
     }
 }

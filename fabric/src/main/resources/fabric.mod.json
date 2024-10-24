@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "idiochrono",
+  "id": "chronoception",
   "version": "${version}",
-  "name": "Idiochronoception",
+  "name": "Chronoception",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "chromonym"
@@ -12,18 +12,18 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
   "license": "CC0-1.0",
-  "icon": "assets/idiochrono/icon.png",
+  "icon": "assets/chronoception/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.chromonym.idiochrono.fabric.IdiochronoFabric"
+      "io.github.chromonym.chronoception.fabric.ChronoceptionFabric"
     ],
     "client": [
-      "io.github.chromonym.idiochrono.fabric.client.IdiochronoFabricClient"
+      "io.github.chromonym.chronoception.fabric.client.ChronoceptionFabricClient"
     ]
   },
   "mixins": [
-    "idiochrono.mixins.json"
+    "chronoception.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.16.7",

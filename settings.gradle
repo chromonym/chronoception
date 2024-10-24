@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'idiochrono'
+rootProject.name = 'chronoception'
 
 include 'common'
 include 'fabric'

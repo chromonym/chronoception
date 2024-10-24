@@ -1,4 +1,4 @@
-package io.github.chromonym.idiochrono;
+package io.github.chromonym.chronoception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +21,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import static net.minecraft.server.command.CommandManager.*;
 
-public final class Idiochrono {
-    public static final String MOD_ID = "idiochrono";
+public final class Chronoception {
+    public static final String MOD_ID = "chronoception";
 
     public static final Identifier INITIAL_SYNC = Identifier.of(MOD_ID, "initial_sync");
     public static final Identifier PLAYER_TIME_MODIFIED = Identifier.of(MOD_ID, "player_time_modified");
@@ -34,7 +34,7 @@ public final class Idiochrono {
             syncPlayerTimes(player, true);
         });
         CommandRegistrationEvent.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(literal("idiochrono")
+            dispatcher.register(literal("chronoception")
                 .then(argument("player", EntityArgumentType.player())
                     .then(argument("rate", BoolArgumentType.bool())
                         .executes(context -> {
