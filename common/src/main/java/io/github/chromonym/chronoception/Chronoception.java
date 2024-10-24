@@ -14,8 +14,13 @@ import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
+import io.github.chromonym.chronoception.blocks.TimeLockedBlock;
 import io.netty.buffer.Unpooled;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -34,12 +39,15 @@ public final class Chronoception {
     public static final Identifier INITIAL_SYNC = Identifier.of(MOD_ID, "initial_sync");
     public static final Identifier PLAYER_TIME_MODIFIED = Identifier.of(MOD_ID, "player_time_modified");
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(MOD_ID, RegistryKeys.BLOCK);
     public static final DeferredRegister<ItemGroup> ITEM_GROUPS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
 
     public static final RegistrySupplier<Item> DIURNAL_GEM = ITEMS.register("diurnal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> NOCTURNAL_GEM = ITEMS.register("nocturnal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> CREPUSCULAR_GEM = ITEMS.register("crepuscular_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> TRUE_CLOCK = ITEMS.register("true_clock", () -> new Item(new Item.Settings()));
+    public static final RegistrySupplier<TimeLockedBlock> CREPUSCULAR_GHOSTBLOCK = BLOCKS.register("crepuscular_ghostblock", () -> new TimeLockedBlock(AbstractBlock.Settings.copy(Blocks.RED_WOOL)));
+    public static final RegistrySupplier<BlockItem> CREPUSCULAR_GHOSTBLOCK_ITEM = ITEMS.register("crepuscular_ghostblock", () -> new BlockItem(CREPUSCULAR_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final Supplier<ItemGroup> CHRONOCEPTION_TAB = ITEM_GROUPS.register("tab", () -> ItemGroup.create(Row.TOP, 0)
         .displayName(Text.translatable("itemGroup." + MOD_ID + ".tab"))
@@ -49,9 +57,11 @@ public final class Chronoception {
             output.add(NOCTURNAL_GEM.get());
             output.add(CREPUSCULAR_GEM.get());
             output.add(TRUE_CLOCK.get());
+            output.add(CREPUSCULAR_GHOSTBLOCK_ITEM.get());
         }).build());
     
     public static void init() {
+        BLOCKS.register();
         ITEMS.register();
         ITEM_GROUPS.register();
         PlayerEvent.PLAYER_JOIN.register((player) -> {
