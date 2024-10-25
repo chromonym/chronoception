@@ -15,10 +15,46 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 public class ChronoceptionClient {
     public static PlayerTimeData playerData = new PlayerTimeData();
+    public static ClampedModelPredicateProvider trueClockProvider = new ClampedModelPredicateProvider(){
+        private double time;
+        private double step;
+        private long lastTick;
+
+        @Override
+        public float unclampedCall(ItemStack itemStack, @Nullable ClientWorld clientWorld, @Nullable LivingEntity livingEntity, int i) {
+            Entity entity;
+            Entity entity2 = entity = livingEntity != null ? livingEntity : itemStack.getHolder();
+            if (entity == null) {
+                return 0.0f;
+            }
+            if (clientWorld == null && entity.getWorld() instanceof ClientWorld) {
+                clientWorld = (ClientWorld)entity.getWorld();
+            }
+            if (clientWorld == null) {
+                return 0.0f;
+            }
+            double d = clientWorld.getDimension().natural() ? (double)clientWorld.getDimension().getSkyAngle(clientWorld.getLunarTime() - (long)playerData.offset) : Math.random();
+            d = this.getTime(clientWorld, d);
+            return (float)d;
+        }
+
+        private double getTime(World world, double skyAngle) {
+            if (world.getTime() != this.lastTick) {
+                this.lastTick = world.getTime();
+                double d = skyAngle - this.time;
+                d = MathHelper.floorMod(d + 0.5, 1.0) - 0.5;
+                this.step += d * 0.1;
+                this.step *= 0.9;
+                this.time = MathHelper.floorMod(this.time + this.step, 1.0);
+            }
+            return this.time;
+        }
+    };
 
     public static void init() {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, Chronoception.INITIAL_SYNC, (buf, context) -> {
@@ -38,46 +74,16 @@ public class ChronoceptionClient {
             if (client.isConnectedToLocalServer()) {
                 if (client.getServer().isPaused()) { return; }
             }
-            playerData.offset += playerData.tickrate - 1.0;
-            playerData.offset %= 192000.0; // one lunar cycle
+            if (client.world != null) {
+                if (client.world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
+                    playerData.offset += playerData.tickrate - 1.0;
+                    playerData.offset %= 192000.0; // one lunar cycle
+                }
+            }
         });
         
-        ClientLifecycleEvent.CLIENT_SETUP.register((client) -> {
-            ItemPropertiesRegistry.register(Chronoception.TRUE_CLOCK.get(), Identifier.ofVanilla("server_time"), new ClampedModelPredicateProvider(){
-                private double time;
-                private double step;
-                private long lastTick;
-        
-                @Override
-                public float unclampedCall(ItemStack itemStack, @Nullable ClientWorld clientWorld, @Nullable LivingEntity livingEntity, int i) {
-                    Entity entity;
-                    Entity entity2 = entity = livingEntity != null ? livingEntity : itemStack.getHolder();
-                    if (entity == null) {
-                        return 0.0f;
-                    }
-                    if (clientWorld == null && entity.getWorld() instanceof ClientWorld) {
-                        clientWorld = (ClientWorld)entity.getWorld();
-                    }
-                    if (clientWorld == null) {
-                        return 0.0f;
-                    }
-                    double d = clientWorld.getDimension().natural() ? (double)clientWorld.getDimension().getSkyAngle(clientWorld.getLunarTime() - (long)playerData.offset) : Math.random();
-                    d = this.getTime(clientWorld, d);
-                    return (float)d;
-                }
-        
-                private double getTime(World world, double skyAngle) {
-                    if (world.getTime() != this.lastTick) {
-                        this.lastTick = world.getTime();
-                        double d = skyAngle - this.time;
-                        d = MathHelper.floorMod(d + 0.5, 1.0) - 0.5;
-                        this.step += d * 0.1;
-                        this.step *= 0.9;
-                        this.time = MathHelper.floorMod(this.time + this.step, 1.0);
-                    }
-                    return this.time;
-                }
-            });
-        });
+        /*ClientLifecycleEvent.CLIENT_SETUP.register((client) -> {
+            ItemPropertiesRegistry.register(Chronoception.TRUE_CLOCK.get(), Identifier.ofVanilla("server_time"), trueClockProvider);
+        });*/
     }
 }
