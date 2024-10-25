@@ -35,6 +35,9 @@ public class ChronoceptionClient {
             Chronoception.LOGGER.info("Player times updated - Offset: %s, Rate: %s, Base rate: %s".formatted(playerData.offset, playerData.tickrate, playerData.baseTickrate));
         });
         ClientTickEvent.CLIENT_PRE.register((client) -> {
+            if (client.isConnectedToLocalServer()) {
+                if (client.getServer().isPaused()) { return; }
+            }
             playerData.offset += playerData.tickrate - 1.0;
             playerData.offset %= 192000.0; // one lunar cycle
         });

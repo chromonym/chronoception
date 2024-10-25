@@ -19,7 +19,9 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -30,6 +32,8 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
+
 import static net.minecraft.server.command.CommandManager.*;
 
 public final class Chronoception {
@@ -46,7 +50,7 @@ public final class Chronoception {
     public static final RegistrySupplier<Item> NOCTURNAL_GEM = ITEMS.register("nocturnal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> CREPUSCULAR_GEM = ITEMS.register("crepuscular_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> TRUE_CLOCK = ITEMS.register("true_clock", () -> new Item(new Item.Settings()));
-    public static final RegistrySupplier<TimeLockedBlock> CREPUSCULAR_GHOSTBLOCK = BLOCKS.register("crepuscular_ghostblock", () -> new TimeLockedBlock(AbstractBlock.Settings.copy(Blocks.RED_WOOL)));
+    public static final RegistrySupplier<TimeLockedBlock> CREPUSCULAR_GHOSTBLOCK = BLOCKS.register("crepuscular_ghostblock", () -> new TimeLockedBlock(AbstractBlock.Settings.copy(Blocks.RED_WOOL).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false)));
     public static final RegistrySupplier<BlockItem> CREPUSCULAR_GHOSTBLOCK_ITEM = ITEMS.register("crepuscular_ghostblock", () -> new BlockItem(CREPUSCULAR_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final Supplier<ItemGroup> CHRONOCEPTION_TAB = ITEM_GROUPS.register("tab", () -> ItemGroup.create(Row.TOP, 0)
@@ -104,7 +108,7 @@ public final class Chronoception {
                 )
             );
         });
-        TickEvent.SERVER_PRE.register((server) -> {
+        TickEvent.Server.SERVER_PRE.register((server) -> {
             PlayerStateSaver playerStateSaver = PlayerStateSaver.getServerState(server);
             playerStateSaver.players.forEach((uuid, playerData) -> {
                 playerData.offset += playerData.tickrate - 1.0;
@@ -122,6 +126,14 @@ public final class Chronoception {
             NetworkManager.sendToPlayer(player, INITIAL_SYNC, data);
         } else {
             NetworkManager.sendToPlayer(player, PLAYER_TIME_MODIFIED, data);
+        }
+    }
+    public static long getPercievedTime(World world, PlayerEntity player) {
+        if (world instanceof ClientWorld clientWorld) {
+            return clientWorld.getTimeOfDay() % 24000L; // should be modified already
+        } else {
+            PlayerTimeData playerData = PlayerStateSaver.getPlayerState(player);
+            return (world.getTimeOfDay() + (long)playerData.offset) % 24000L; // otherwise calc it here
         }
     }
 }
