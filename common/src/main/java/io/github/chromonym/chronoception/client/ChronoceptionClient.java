@@ -2,10 +2,8 @@ package io.github.chromonym.chronoception.client;
 
 import org.jetbrains.annotations.Nullable;
 
-import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.registry.item.ItemPropertiesRegistry;
 import io.github.chromonym.chronoception.Chronoception;
 import io.github.chromonym.chronoception.PlayerTimeData;
 import net.minecraft.client.item.ClampedModelPredicateProvider;
@@ -13,7 +11,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;

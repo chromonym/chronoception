@@ -3,7 +3,6 @@ package io.github.chromonym.chronoception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
@@ -47,7 +46,7 @@ public final class Chronoception {
 
     public static final BiPredicate<Long,Long> CREPUSCULAR = (local, lunar) -> (local >= 12502L && local <= 13702L) || (local >= 22300L && local <= 23500L); // 1200-tick windows ending/starting when the sun disappears/appears on the horizon
     public static final BiPredicate<Long,Long> DIURNAL = (local, lunar) -> (local > 23216L || local < 12786L); // solar zenith angle = 0
-    public static final BiPredicate<Long,Long> NOCTURNAL = (local, lunar) -> (local < 12786L && local < 23216L); // solar zenith angle = 0
+    public static final BiPredicate<Long,Long> NOCTURNAL = (local, lunar) -> (local > 12786L && local < 23216L); // solar zenith angle = 0
 
     public static final Identifier INITIAL_SYNC = Identifier.of(MOD_ID, "initial_sync");
     public static final Identifier PLAYER_TIME_MODIFIED = Identifier.of(MOD_ID, "player_time_modified");
@@ -59,14 +58,21 @@ public final class Chronoception {
     public static final RegistrySupplier<Item> NOCTURNAL_GEM = ITEMS.register("nocturnal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> CREPUSCULAR_GEM = ITEMS.register("crepuscular_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> TRUE_CLOCK = ITEMS.register("true_clock", () -> new Item(new Item.Settings()));
+
     public static final RegistrySupplier<TimeLockedBlock> CREPUSCULAR_GHOSTBLOCK = BLOCKS.register("crepuscular_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.ORANGE_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
         Blocks.ORANGE_STAINED_GLASS, CREPUSCULAR));
     public static final RegistrySupplier<BlockItem> CREPUSCULAR_GHOSTBLOCK_ITEM = ITEMS.register("crepuscular_ghostblock", () -> new BlockItem(CREPUSCULAR_GHOSTBLOCK.get(), new Item.Settings()));
+    
     public static final RegistrySupplier<TimeLockedBlock> DIURNAL_GHOSTBLOCK = BLOCKS.register("diurnal_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.LIGHT_BLUE_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
         Blocks.LIGHT_BLUE_STAINED_GLASS, DIURNAL));
     public static final RegistrySupplier<BlockItem> DIURNAL_GHOSTBLOCK_ITEM = ITEMS.register("diurnal_ghostblock", () -> new BlockItem(DIURNAL_GHOSTBLOCK.get(), new Item.Settings()));
+
+    public static final RegistrySupplier<TimeLockedBlock> NOCTURNAL_GHOSTBLOCK = BLOCKS.register("nocturnal_ghostblock", () -> new TimeCollisionBlock(
+        AbstractBlock.Settings.copy(Blocks.ORANGE_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
+        Blocks.BLUE_STAINED_GLASS, NOCTURNAL));
+    public static final RegistrySupplier<BlockItem> NOCTURNAL_GHOSTBLOCK_ITEM = ITEMS.register("nocturnal_ghostblock", () -> new BlockItem(NOCTURNAL_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final Supplier<ItemGroup> CHRONOCEPTION_TAB = ITEM_GROUPS.register("tab", () -> ItemGroup.create(Row.TOP, 0)
         .displayName(Text.translatable("itemGroup." + MOD_ID + ".tab"))
@@ -75,8 +81,9 @@ public final class Chronoception {
             output.add(DIURNAL_GEM.get());
             output.add(NOCTURNAL_GEM.get());
             output.add(CREPUSCULAR_GEM.get());
-            output.add(CREPUSCULAR_GHOSTBLOCK_ITEM.get());
             output.add(DIURNAL_GHOSTBLOCK_ITEM.get());
+            output.add(NOCTURNAL_GHOSTBLOCK_ITEM.get());
+            output.add(CREPUSCULAR_GHOSTBLOCK_ITEM.get());
             output.add(TRUE_CLOCK.get());
         }).build());
     

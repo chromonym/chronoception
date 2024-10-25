@@ -48,5 +48,5 @@ public class TimeCollisionBlock extends TimeLockedBlock {
         }
         return super.isSideInvisible(state, stateFrom, direction);
     }
-    
+
 }
