@@ -5,7 +5,11 @@
 
     "effect.chronoception.to_daytime": "Instant Daytime",
     "effect.chronoception.to_nighttime": "Instant Nighttime",
-    "effect.chronoception.resynchronization": "Instant Resynchronization",
+    "effect.chronoception.resynchronization": "Resynchronizing",
+    "effect.chronoception.hour_skip": "Hour Skip",
+    "effect.chronoception.hour_reverse": "Hour Reverse",
+    "effect.chronoception.day_skip": "Day Skip",
+    "effect.chronoception.day_reverse": "Day Reverse",
 
     "item.chronoception.diurnal_gem": "Diurnal Gem",
     "item.chronoception.nocturnal_gem": "Nocturnal Gem",
@@ -26,6 +30,28 @@
     "item.minecraft.splash_potion.effect.chronoception_resynchronization": "Splash Potion of Resynchronization",
     "item.minecraft.lingering_potion.effect.chronoception_resynchronization": "Lingering Potion of Resynchronization",
     "item.minecraft.tipped_arrow.effect.chronoception_resynchronization": "Arrow of Resynchronization",
+
+    "item.minecraft.potion.effect.chronoception_hour_skip": "Potion of Hour Skipping",
+    "item.minecraft.splash_potion.effect.chronoception_hour_skip": "Splash Potion of Hour Skipping",
+    "item.minecraft.lingering_potion.effect.chronoception_hour_skip": "Lingering Potion of Hour Skipping",
+    "item.minecraft.tipped_arrow.effect.chronoception_hour_skip": "Arrow of Hour Skipping",
+
+    "item.minecraft.potion.effect.chronoception_hour_reverse": "Potion of Hour Reversing",
+    "item.minecraft.splash_potion.effect.chronoception_hour_reverse": "Splash Potion of Hour Reversing",
+    "item.minecraft.lingering_potion.effect.chronoception_hour_reverse": "Lingering Potion of Hour Reversing",
+    "item.minecraft.tipped_arrow.effect.chronoception_hour_reverse": "Arrow of Hour Reversing",
+
+    "item.minecraft.potion.effect.chronoception_day_skip": "Potion of Day Skipping",
+    "item.minecraft.splash_potion.effect.chronoception_day_skip": "Splash Potion of Day Skipping",
+    "item.minecraft.lingering_potion.effect.chronoception_day_skip": "Lingering Potion of Day Skipping",
+    "item.minecraft.tipped_arrow.effect.chronoception_day_skip": "Arrow of Day Skipping",
+
+    "item.minecraft.potion.effect.chronoception_day_reverse": "Potion of Day Reversing",
+    "item.minecraft.splash_potion.effect.chronoception_day_reverse": "Splash Potion of Day Reversing",
+    "item.minecraft.lingering_potion.effect.chronoception_day_reverse": "Lingering Potion of Day Reversing",
+    "item.minecraft.tipped_arrow.effect.chronoception_day_reverse": "Arrow of Day Reversing",
+
+    "potion.potency.7": "VIII",
 
     "itemGroup.chronoception.tab": "Chronoception"
 }

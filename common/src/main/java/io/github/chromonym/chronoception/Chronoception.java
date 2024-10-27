@@ -12,6 +12,7 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.event.events.common.TickEvent;
+import dev.architectury.networking.NetworkChannel;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
@@ -19,6 +20,7 @@ import io.github.chromonym.chronoception.blocks.TimeCollisionBlock;
 import io.github.chromonym.chronoception.blocks.TimeLockedBlock;
 import io.github.chromonym.chronoception.effects.TimeResetEffect;
 import io.github.chromonym.chronoception.effects.TimeSetEffect;
+import io.github.chromonym.chronoception.effects.TimeSkipEffect;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -54,8 +56,8 @@ public final class Chronoception {
     public static final BiPredicate<Long,Long> DIURNAL = (local, lunar) -> (local > 23216L || local < 12786L); // solar zenith angle = 0
     public static final BiPredicate<Long,Long> NOCTURNAL = (local, lunar) -> (local > 12786L && local < 23216L); // solar zenith angle = 0
 
-    public static final Identifier INITIAL_SYNC = Identifier.of(MOD_ID, "initial_sync");
     public static final Identifier PLAYER_TIME_MODIFIED = Identifier.of(MOD_ID, "player_time_modified");
+
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(MOD_ID, RegistryKeys.BLOCK);
     public static final DeferredRegister<ItemGroup> ITEM_GROUPS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
@@ -70,10 +72,30 @@ public final class Chronoception {
     public static final RegistrySupplier<StatusEffect> TIME_SET_DAY = STATUS_EFFECTS.register("to_daytime", () -> new TimeSetEffect(1000L, 0x54BED8));
     public static final RegistrySupplier<StatusEffect> TIME_SET_NIGHT = STATUS_EFFECTS.register("to_nighttime", () -> new TimeSetEffect(13000L, 0x121851));
     public static final RegistrySupplier<StatusEffect> RESYNCHRONISATION = STATUS_EFFECTS.register("resynchronization", () -> new TimeResetEffect());
+    public static final RegistrySupplier<StatusEffect> HOUR_SKIP = STATUS_EFFECTS.register("hour_skip", () -> new TimeSkipEffect(1000L, 0x681E7D));
+    public static final RegistrySupplier<StatusEffect> HOUR_REVERSE = STATUS_EFFECTS.register("hour_reverse", () -> new TimeSkipEffect(-1000L, 0x8A0C6F));
+    public static final RegistrySupplier<StatusEffect> DAY_SKIP = STATUS_EFFECTS.register("day_skip", () -> new TimeSkipEffect(24000L, 0xC14FEA));
+    public static final RegistrySupplier<StatusEffect> DAY_REVERSE = STATUS_EFFECTS.register("day_reverse", () -> new TimeSkipEffect(-24000L, 0xD764AF));
 
     public static final RegistrySupplier<Potion> TIME_SET_DAY_POTION = POTIONS.register("chronoception_to_daytime", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(TIME_SET_DAY.get()))));
     public static final RegistrySupplier<Potion> TIME_SET_NIGHT_POTION = POTIONS.register("chronoception_to_nighttime", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(TIME_SET_NIGHT.get()))));
     public static final RegistrySupplier<Potion> RESYNCHRONISATION_POTION = POTIONS.register("chronoception_resynchronization", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(RESYNCHRONISATION.get()))));
+    public static final RegistrySupplier<Potion> HOUR_SKIP_POTION = POTIONS.register("chronoception_hour_skip", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_SKIP.get()))));
+    public static final RegistrySupplier<Potion> HOUR_SKIP_II_POTION = POTIONS.register("chronoception_hour_skip_2", () -> new Potion("chronoception_hour_skip", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_SKIP.get()), 0, 1)));
+    public static final RegistrySupplier<Potion> HOUR_SKIP_IV_POTION = POTIONS.register("chronoception_hour_skip_4", () -> new Potion("chronoception_hour_skip", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_SKIP.get()), 0, 3)));
+    public static final RegistrySupplier<Potion> HOUR_SKIP_VIII_POTION = POTIONS.register("chronoception_hour_skip_8", () -> new Potion("chronoception_hour_skip", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_SKIP.get()), 0, 7)));
+    public static final RegistrySupplier<Potion> HOUR_REVERSE_POTION = POTIONS.register("chronoception_hour_reverse", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_REVERSE.get()))));
+    public static final RegistrySupplier<Potion> HOUR_REVERSE_II_POTION = POTIONS.register("chronoception_hour_reverse_2", () -> new Potion("chronoception_hour_reverse", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_REVERSE.get()), 0, 1)));
+    public static final RegistrySupplier<Potion> HOUR_REVERSE_IV_POTION = POTIONS.register("chronoception_hour_reverse_4", () -> new Potion("chronoception_hour_reverse", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_REVERSE.get()), 0, 3)));
+    public static final RegistrySupplier<Potion> HOUR_REVERSE_VIII_POTION = POTIONS.register("chronoception_hour_reverse_8", () -> new Potion("chronoception_hour_reverse", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_REVERSE.get()), 0, 7)));
+    public static final RegistrySupplier<Potion> DAY_SKIP_POTION = POTIONS.register("chronoception_day_skip", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_SKIP.get()))));
+    public static final RegistrySupplier<Potion> DAY_SKIP_II_POTION = POTIONS.register("chronoception_day_skip_2", () -> new Potion("chronoception_day_skip", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_SKIP.get()), 0, 1)));
+    public static final RegistrySupplier<Potion> DAY_SKIP_III_POTION = POTIONS.register("chronoception_day_skip_3", () -> new Potion("chronoception_day_skip", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_SKIP.get()), 0, 2)));
+    public static final RegistrySupplier<Potion> DAY_SKIP_IV_POTION = POTIONS.register("chronoception_day_skip_4", () -> new Potion("chronoception_day_skip", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_SKIP.get()), 0, 3)));
+    public static final RegistrySupplier<Potion> DAY_REVERSE_POTION = POTIONS.register("chronoception_day_reverse", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_REVERSE.get()))));
+    public static final RegistrySupplier<Potion> DAY_REVERSE_II_POTION = POTIONS.register("chronoception_day_reverse_2", () -> new Potion("chronoception_day_reverse", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_REVERSE.get()), 0, 1)));
+    public static final RegistrySupplier<Potion> DAY_REVERSE_III_POTION = POTIONS.register("chronoception_day_reverse_3", () -> new Potion("chronoception_day_reverse", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_REVERSE.get()), 0, 2)));
+    public static final RegistrySupplier<Potion> DAY_REVERSE_IV_POTION = POTIONS.register("chronoception_day_reverse_4", () -> new Potion("chronoception_day_reverse", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_REVERSE.get()), 0, 3)));
 
     public static final RegistrySupplier<TimeLockedBlock> CREPUSCULAR_GHOSTBLOCK = BLOCKS.register("crepuscular_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.ORANGE_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
@@ -156,6 +178,9 @@ public final class Chronoception {
                 playerStateSaver.players.forEach((uuid, playerData) -> {
                     playerData.offset += playerData.tickrate - 1.0;
                     playerData.offset %= 192000.0; // one lunar cycle
+                    if (playerData.offset < 0.0) {
+                        playerData.offset += 192000.0;
+                    }
                 });
             }
         });
@@ -166,11 +191,7 @@ public final class Chronoception {
         data.writeDouble(playerState.offset);
         data.writeDouble(playerState.tickrate);
         data.writeDouble(playerState.baseTickrate);
-        if (instant) {
-            NetworkManager.sendToPlayer(player, INITIAL_SYNC, data);
-        } else {
-            NetworkManager.sendToPlayer(player, PLAYER_TIME_MODIFIED, data);
-        }
+        NetworkManager.sendToPlayer(player, PLAYER_TIME_MODIFIED, data);
     }
     public static long getPercievedTime(WorldAccess world, PlayerEntity player) {
         if (world instanceof ClientWorld clientWorld) {

@@ -54,12 +54,6 @@ public class ChronoceptionClient {
     };
 
     public static void init() {
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, Chronoception.INITIAL_SYNC, (buf, context) -> {
-            playerData.offset = buf.readDouble();
-            playerData.tickrate = buf.readDouble();
-            playerData.baseTickrate = buf.readDouble();
-            Chronoception.LOGGER.info("Initial player times - Offset: %s, Rate: %s, Base rate: %s".formatted(playerData.offset, playerData.tickrate, playerData.baseTickrate));
-        });
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, Chronoception.PLAYER_TIME_MODIFIED, (buf, context) -> {
             Chronoception.LOGGER.info("Client-stored times - Offset: %s, Rate: %s, Base rate: %s".formatted(playerData.offset, playerData.tickrate, playerData.baseTickrate));
             playerData.offset = buf.readDouble();
@@ -75,6 +69,9 @@ public class ChronoceptionClient {
                 if (client.world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
                     playerData.offset += playerData.tickrate - 1.0;
                     playerData.offset %= 192000.0; // one lunar cycle
+                    if (playerData.offset < 0.0) {
+                        playerData.offset += 192000.0;
+                    }
                 }
             }
         });
