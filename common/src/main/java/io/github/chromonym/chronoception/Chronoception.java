@@ -12,7 +12,6 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.event.events.common.TickEvent;
-import dev.architectury.networking.NetworkChannel;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
@@ -56,8 +55,9 @@ public final class Chronoception {
     public static final BiPredicate<Long,Long> DIURNAL = (local, lunar) -> (local > 23216L || local < 12786L); // solar zenith angle = 0
     public static final BiPredicate<Long,Long> NOCTURNAL = (local, lunar) -> (local > 12786L && local < 23216L); // solar zenith angle = 0
 
+    public static final Identifier INITIAL_SYNC = Identifier.of(MOD_ID, "initial_sync");
     public static final Identifier PLAYER_TIME_MODIFIED = Identifier.of(MOD_ID, "player_time_modified");
-
+    
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(MOD_ID, RegistryKeys.BLOCK);
     public static final DeferredRegister<ItemGroup> ITEM_GROUPS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
@@ -184,6 +184,7 @@ public final class Chronoception {
                 });
             }
         });
+        
     }
     public static void syncPlayerTimes(ServerPlayerEntity player, boolean instant) {
         PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
@@ -191,7 +192,11 @@ public final class Chronoception {
         data.writeDouble(playerState.offset);
         data.writeDouble(playerState.tickrate);
         data.writeDouble(playerState.baseTickrate);
-        NetworkManager.sendToPlayer(player, PLAYER_TIME_MODIFIED, data);
+        if (instant) {
+            NetworkManager.sendToPlayer(player, INITIAL_SYNC, data);
+        } else {
+            NetworkManager.sendToPlayer(player, PLAYER_TIME_MODIFIED, data);
+        }
     }
     public static long getPercievedTime(WorldAccess world, PlayerEntity player) {
         if (world instanceof ClientWorld clientWorld) {

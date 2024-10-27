@@ -20,6 +20,9 @@
     ],
     "client": [
       "io.github.chromonym.chronoception.fabric.client.ChronoceptionFabricClient"
+    ],
+    "server": [
+      "io.github.chromonym.chronoception.fabric.ChronoceptionFabricServer"
     ]
   },
   "mixins": [
