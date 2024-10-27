@@ -17,12 +17,16 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import io.github.chromonym.chronoception.blocks.TimeCollisionBlock;
 import io.github.chromonym.chronoception.blocks.TimeLockedBlock;
+import io.github.chromonym.chronoception.effects.TimeResetEffect;
+import io.github.chromonym.chronoception.effects.TimeSetEffect;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -30,6 +34,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemGroup.Row;
 import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.potion.Potion;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -53,11 +59,21 @@ public final class Chronoception {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(MOD_ID, RegistryKeys.BLOCK);
     public static final DeferredRegister<ItemGroup> ITEM_GROUPS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
+    public static final DeferredRegister<StatusEffect> STATUS_EFFECTS = DeferredRegister.create(MOD_ID, RegistryKeys.STATUS_EFFECT);
+    public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(MOD_ID, RegistryKeys.POTION);
 
     public static final RegistrySupplier<Item> DIURNAL_GEM = ITEMS.register("diurnal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> NOCTURNAL_GEM = ITEMS.register("nocturnal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> CREPUSCULAR_GEM = ITEMS.register("crepuscular_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> TRUE_CLOCK = ITEMS.register("true_clock", () -> new Item(new Item.Settings()));
+
+    public static final RegistrySupplier<StatusEffect> TIME_SET_DAY = STATUS_EFFECTS.register("to_daytime", () -> new TimeSetEffect(1000L, 0x54BED8));
+    public static final RegistrySupplier<StatusEffect> TIME_SET_NIGHT = STATUS_EFFECTS.register("to_nighttime", () -> new TimeSetEffect(13000L, 0x121851));
+    public static final RegistrySupplier<StatusEffect> RESYNCHRONISATION = STATUS_EFFECTS.register("resynchronization", () -> new TimeResetEffect());
+
+    public static final RegistrySupplier<Potion> TIME_SET_DAY_POTION = POTIONS.register("chronoception_to_daytime", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(TIME_SET_DAY.get()))));
+    public static final RegistrySupplier<Potion> TIME_SET_NIGHT_POTION = POTIONS.register("chronoception_to_nighttime", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(TIME_SET_NIGHT.get()))));
+    public static final RegistrySupplier<Potion> RESYNCHRONISATION_POTION = POTIONS.register("chronoception_resynchronization", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(RESYNCHRONISATION.get()))));
 
     public static final RegistrySupplier<TimeLockedBlock> CREPUSCULAR_GHOSTBLOCK = BLOCKS.register("crepuscular_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.ORANGE_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
@@ -92,6 +108,8 @@ public final class Chronoception {
         BLOCKS.register();
         ITEMS.register();
         ITEM_GROUPS.register();
+        STATUS_EFFECTS.register();
+        POTIONS.register();
         PlayerEvent.PLAYER_JOIN.register((player) -> {
             syncPlayerTimes(player, true);
         });

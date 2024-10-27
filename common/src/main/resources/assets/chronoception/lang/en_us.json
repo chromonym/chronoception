@@ -3,10 +3,29 @@
     "block.chronoception.diurnal_ghostblock": "Diurnal Ghostblock",
     "block.chronoception.nocturnal_ghostblock": "Nocturnal Ghostblock",
 
+    "effect.chronoception.to_daytime": "Instant Daytime",
+    "effect.chronoception.to_nighttime": "Instant Nighttime",
+    "effect.chronoception.resynchronization": "Instant Resynchronization",
+
     "item.chronoception.diurnal_gem": "Diurnal Gem",
     "item.chronoception.nocturnal_gem": "Nocturnal Gem",
     "item.chronoception.crepuscular_gem": "Crepuscular Gem",
     "item.chronoception.true_clock": "True Clock",
+
+    "item.minecraft.potion.effect.chronoception_to_daytime": "Potion of Day",
+    "item.minecraft.splash_potion.effect.chronoception_to_daytime": "Splash Potion of Day",
+    "item.minecraft.lingering_potion.effect.chronoception_to_daytime": "Lingering Potion of Day",
+    "item.minecraft.tipped_arrow.effect.chronoception_to_daytime": "Arrow of Day",
+
+    "item.minecraft.potion.effect.chronoception_to_nighttime": "Potion of Night",
+    "item.minecraft.splash_potion.effect.chronoception_to_nighttime": "Splash Potion of Night",
+    "item.minecraft.lingering_potion.effect.chronoception_to_nighttime": "Lingering Potion of Night",
+    "item.minecraft.tipped_arrow.effect.chronoception_to_nighttime": "Arrow of Night",
+
+    "item.minecraft.potion.effect.chronoception_resynchronization": "Potion of Resynchronization",
+    "item.minecraft.splash_potion.effect.chronoception_resynchronization": "Splash Potion of Resynchronization",
+    "item.minecraft.lingering_potion.effect.chronoception_resynchronization": "Lingering Potion of Resynchronization",
+    "item.minecraft.tipped_arrow.effect.chronoception_resynchronization": "Arrow of Resynchronization",
 
     "itemGroup.chronoception.tab": "Chronoception"
 }
