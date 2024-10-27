@@ -7,12 +7,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.EntityShapeContext;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
@@ -51,15 +49,5 @@ public abstract class TimeLockedBlock extends Block {
 
     public Block getTimelessDimensionReplace() {
         return this.timelessDimensionReplace;
-    }
-
-    @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (world.isClient()) {
-            if (world instanceof ClientWorld && !validTime.test(world.getTimeOfDay(), world.getLunarTime())) {
-                world.addBlockBreakParticles(pos, state); // TODO use a better particle
-            }
-        }
-        super.randomDisplayTick(state, world, pos, random);
     }
 }

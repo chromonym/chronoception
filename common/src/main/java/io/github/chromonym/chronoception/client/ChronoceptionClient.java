@@ -78,9 +78,5 @@ public class ChronoceptionClient {
                 }
             }
         });
-        
-        /*ClientLifecycleEvent.CLIENT_SETUP.register((client) -> {
-            ItemPropertiesRegistry.register(Chronoception.TRUE_CLOCK.get(), Identifier.ofVanilla("server_time"), trueClockProvider);
-        });*/
     }
 }

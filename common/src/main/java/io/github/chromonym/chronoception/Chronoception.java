@@ -61,6 +61,7 @@ public final class Chronoception {
 
     public static final RegistrySupplier<TimeLockedBlock> CREPUSCULAR_GHOSTBLOCK = BLOCKS.register("crepuscular_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.ORANGE_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
+        //.emissiveLighting((state, view, pos) -> view instanceof ClientWorld world ? CREPUSCULAR.test(world.getTimeOfDay(), world.getLunarTime()) : false),
         Blocks.ORANGE_STAINED_GLASS, CREPUSCULAR));
     public static final RegistrySupplier<BlockItem> CREPUSCULAR_GHOSTBLOCK_ITEM = ITEMS.register("crepuscular_ghostblock", () -> new BlockItem(CREPUSCULAR_GHOSTBLOCK.get(), new Item.Settings()));
     
