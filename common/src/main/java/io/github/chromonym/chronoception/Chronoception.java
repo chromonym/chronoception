@@ -18,6 +18,7 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import io.github.chromonym.chronoception.blocks.TimeCollisionBlock;
 import io.github.chromonym.chronoception.blocks.TimeLockedBlock;
+import io.github.chromonym.chronoception.effects.TimeMultiplyEffect;
 import io.github.chromonym.chronoception.effects.TimeResetEffect;
 import io.github.chromonym.chronoception.effects.TimeSetEffect;
 import io.github.chromonym.chronoception.effects.TimeSkipEffect;
@@ -87,6 +88,9 @@ public final class Chronoception {
     public static final RegistrySupplier<StatusEffect> HOUR_REVERSE = STATUS_EFFECTS.register("hour_reverse", () -> new TimeSkipEffect(-1000L, 0x8A0C6F));
     public static final RegistrySupplier<StatusEffect> DAY_SKIP = STATUS_EFFECTS.register("day_skip", () -> new TimeSkipEffect(24000L, 0xC14FEA));
     public static final RegistrySupplier<StatusEffect> DAY_REVERSE = STATUS_EFFECTS.register("day_reverse", () -> new TimeSkipEffect(-24000L, 0xD764AF));
+    public static final RegistrySupplier<TimeMultiplyEffect> DOUBLE_TIME = STATUS_EFFECTS.register("double_time", () -> new TimeMultiplyEffect(2.0, 0x000000)); // TODO colours
+    public static final RegistrySupplier<TimeMultiplyEffect> HALF_TIME = STATUS_EFFECTS.register("half_time", () -> new TimeMultiplyEffect(0.5, 0x000000));
+    public static final RegistrySupplier<TimeMultiplyEffect> REVERSE_TIME = STATUS_EFFECTS.register("reverse_time", () -> new TimeMultiplyEffect(-1.0, 0x000000));
 
     public static final RegistrySupplier<Potion> TIME_SET_DAY_POTION = POTIONS.register("chronoception_to_daytime", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(TIME_SET_DAY.get()))));
     public static final RegistrySupplier<Potion> TIME_SET_NIGHT_POTION = POTIONS.register("chronoception_to_nighttime", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(TIME_SET_NIGHT.get()))));
@@ -192,6 +196,7 @@ public final class Chronoception {
                                 PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
                                 if (BoolArgumentType.getBool(context, "rate")) {
                                     playerState.tickrate = DoubleArgumentType.getDouble(context, "new_value");
+                                    playerState.baseTickrate = DoubleArgumentType.getDouble(context, "new_value");
                                     context.getSource().sendFeedback(() -> Text.literal("Updated tick rate to %s".formatted(playerState.tickrate)), true);
                                 } else {
                                     playerState.offset = DoubleArgumentType.getDouble(context, "new_value");

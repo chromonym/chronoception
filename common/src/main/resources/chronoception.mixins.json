@@ -7,6 +7,9 @@
     "ClientWorldMixin"
   ],
   "mixins": [
+    "PlayerStatusEffectMixinParent",
+    "PlayerStatusEffectMixin",
+    "StatusEffectInstanceMixin"
   ],
   "injectors": {
     "defaultRequire": 1
