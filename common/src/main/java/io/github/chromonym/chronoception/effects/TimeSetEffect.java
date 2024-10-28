@@ -24,7 +24,7 @@ public class TimeSetEffect extends InstantStatusEffect {
             long nextDay = (Math.round((double)(playerTime - time) / 24000L))*24000L + time;
             PlayerTimeData data = PlayerStateSaver.getPlayerState(player);
             data.offset = data.offset - playerTime + nextDay;
-            Chronoception.syncPlayerTimes(player, false);
+            Chronoception.syncPlayerTimes(player);
         }
         return true;
     }

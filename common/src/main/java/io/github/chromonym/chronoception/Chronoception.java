@@ -20,11 +20,10 @@ import io.github.chromonym.chronoception.blocks.TimeLockedBlock;
 import io.github.chromonym.chronoception.effects.TimeResetEffect;
 import io.github.chromonym.chronoception.effects.TimeSetEffect;
 import io.github.chromonym.chronoception.effects.TimeSkipEffect;
-import io.netty.buffer.Unpooled;
+import io.github.chromonym.chronoception.networking.PlayerTimePayload;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -34,7 +33,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemGroup.Row;
-import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
@@ -43,7 +41,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.LunarWorldView;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.World;
 
 import static net.minecraft.server.command.CommandManager.*;
 
@@ -55,7 +53,7 @@ public final class Chronoception {
     public static final BiPredicate<Long,Long> DIURNAL = (local, lunar) -> (local > 23216L || local < 12786L); // solar zenith angle = 0
     public static final BiPredicate<Long,Long> NOCTURNAL = (local, lunar) -> (local > 12786L && local < 23216L); // solar zenith angle = 0
 
-    public static final Identifier INITIAL_SYNC = Identifier.of(MOD_ID, "initial_sync");
+    //public static final Identifier INITIAL_SYNC = Identifier.of(MOD_ID, "initial_sync");
     public static final Identifier PLAYER_TIME_MODIFIED = Identifier.of(MOD_ID, "player_time_modified");
     
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM);
@@ -133,7 +131,7 @@ public final class Chronoception {
         STATUS_EFFECTS.register();
         POTIONS.register();
         PlayerEvent.PLAYER_JOIN.register((player) -> {
-            syncPlayerTimes(player, true);
+            syncPlayerTimes(player);
         });
         CommandRegistrationEvent.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(literal("chronoception")
@@ -149,7 +147,7 @@ public final class Chronoception {
                                 playerTime = playerState.offset;
                                 context.getSource().sendFeedback(() -> Text.literal("Offset Time: %s".formatted(playerTime)), false);
                             }
-                            syncPlayerTimes(EntityArgumentType.getPlayer(context, "player"), false);
+                            syncPlayerTimes(EntityArgumentType.getPlayer(context, "player"));
                             return 1;
                         })
                         .then(argument("new_value",DoubleArgumentType.doubleArg())
@@ -164,7 +162,7 @@ public final class Chronoception {
                                     playerState.offset = DoubleArgumentType.getDouble(context, "new_value");
                                     context.getSource().sendFeedback(() -> Text.literal("Updated time offset to %s".formatted(playerState.offset)), true);
                                 }
-                                syncPlayerTimes(player, false);
+                                syncPlayerTimes(player);
                                 return 1;
                             })
                         )
@@ -186,21 +184,20 @@ public final class Chronoception {
         });
         
     }
-    public static void syncPlayerTimes(ServerPlayerEntity player, boolean instant) {
-        PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
-        RegistryByteBuf data = new RegistryByteBuf(Unpooled.buffer(), player.getRegistryManager());
-        data.writeDouble(playerState.offset);
-        data.writeDouble(playerState.tickrate);
-        data.writeDouble(playerState.baseTickrate);
-        if (instant) {
-            NetworkManager.sendToPlayer(player, INITIAL_SYNC, data);
-        } else {
-            NetworkManager.sendToPlayer(player, PLAYER_TIME_MODIFIED, data);
+    public static void syncPlayerTimes(ServerPlayerEntity player) {
+        if (!player.getWorld().isClient()) {
+            PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+            NetworkManager.sendToPlayer(player, new PlayerTimePayload(playerState.offset, playerState.tickrate, playerState.baseTickrate));
+            /*RegistryByteBuf data = new RegistryByteBuf(Unpooled.buffer(), player.getRegistryManager());
+            data.writeDouble(playerState.offset);
+            data.writeDouble(playerState.tickrate);
+            data.writeDouble(playerState.baseTickrate);
+            NetworkManager.sendToPlayer(player, PLAYER_TIME_MODIFIED, data);*/
         }
     }
-    public static long getPercievedTime(WorldAccess world, PlayerEntity player) {
-        if (world instanceof ClientWorld clientWorld) {
-            return clientWorld.getTimeOfDay() % 24000L; // should be modified already
+    public static long getPercievedTime(World world, PlayerEntity player) {
+        if (world.isClient()) {
+            return world.getTimeOfDay() % 24000L; // should be modified already
         } else {
             PlayerTimeData playerData = PlayerStateSaver.getPlayerState(player);
             return (world.getLevelProperties().getTimeOfDay() + (long)playerData.offset) % 24000L; // otherwise calc it here
@@ -208,8 +205,8 @@ public final class Chronoception {
     }
 
     public static long getPercievedLunarTime(LunarWorldView world, PlayerEntity player) {
-        if (world instanceof ClientWorld clientWorld) {
-            return clientWorld.getLunarTime() % 192000L; // should be modified already
+        if (world.isClient()) {
+            return world.getLunarTime() % 192000L; // should be modified already
         } else {
             PlayerTimeData playerData = PlayerStateSaver.getPlayerState(player);
             return (world.getLunarTime() + (long)playerData.offset) % 192000L; // otherwise calc it here

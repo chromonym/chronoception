@@ -38,9 +38,9 @@ public abstract class TimeLockedBlock extends Block {
     public boolean isValidTime(WorldAccess world, ShapeContext context) {
         long localTime = world.getLevelProperties().getTimeOfDay() % 24000L;
         long localLunarTime = world.getLunarTime() % 192000L;
-        if (context instanceof EntityShapeContext entityContext) {
+        if (context instanceof EntityShapeContext entityContext && world instanceof World ww) {
             if (entityContext.getEntity() instanceof PlayerEntity player) {
-                localTime = Chronoception.getPercievedTime(world, player);
+                localTime = Chronoception.getPercievedTime(ww, player);
                 localLunarTime = Chronoception.getPercievedLunarTime(world, player);
             }
         }

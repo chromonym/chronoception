@@ -6,6 +6,7 @@ import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.networking.NetworkManager;
 import io.github.chromonym.chronoception.Chronoception;
 import io.github.chromonym.chronoception.PlayerTimeData;
+import io.github.chromonym.chronoception.networking.PlayerTimePayload;
 import net.minecraft.client.item.ClampedModelPredicateProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -54,13 +55,20 @@ public class ChronoceptionClient {
     };
 
     public static void init() {
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, Chronoception.PLAYER_TIME_MODIFIED, (buf, context) -> {
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, PlayerTimePayload.ID, PlayerTimePayload.CODEC, (payload, context) -> {
+            Chronoception.LOGGER.info("Client-stored times - Offset: %s, Rate: %s, Base rate: %s".formatted(playerData.offset, playerData.tickrate, playerData.baseTickrate));
+            playerData.offset = payload.offset();
+            playerData.tickrate = payload.tickrate();
+            playerData.baseTickrate = payload.baseTickrate();
+            Chronoception.LOGGER.info("Player times updated - Offset: %s, Rate: %s, Base rate: %s".formatted(playerData.offset, playerData.tickrate, playerData.baseTickrate));
+        });
+        /*NetworkManager.registerReceiver(NetworkManager.Side.S2C, Chronoception.PLAYER_TIME_MODIFIED, (buf, context) -> {
             Chronoception.LOGGER.info("Client-stored times - Offset: %s, Rate: %s, Base rate: %s".formatted(playerData.offset, playerData.tickrate, playerData.baseTickrate));
             playerData.offset = buf.readDouble();
             playerData.tickrate = buf.readDouble();
             playerData.baseTickrate = buf.readDouble();
             Chronoception.LOGGER.info("Player times updated - Offset: %s, Rate: %s, Base rate: %s".formatted(playerData.offset, playerData.tickrate, playerData.baseTickrate));
-        });
+        });*/
         ClientTickEvent.CLIENT_PRE.register((client) -> {
             if (client.isConnectedToLocalServer()) {
                 if (client.getServer().isPaused()) { return; }

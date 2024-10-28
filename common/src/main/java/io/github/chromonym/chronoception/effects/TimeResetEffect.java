@@ -19,7 +19,7 @@ public class TimeResetEffect extends InstantStatusEffect {
         if (entity instanceof ServerPlayerEntity player) {
             PlayerTimeData data = PlayerStateSaver.getPlayerState(player);
             data.offset = 0;
-            Chronoception.syncPlayerTimes(player, false);
+            Chronoception.syncPlayerTimes(player);
         }
         return true;
     }

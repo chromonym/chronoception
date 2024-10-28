@@ -22,7 +22,7 @@ public class TimeSkipEffect extends InstantStatusEffect {
         if (entity instanceof ServerPlayerEntity player) {
             PlayerTimeData data = PlayerStateSaver.getPlayerState(player);
             data.offset += time*(1+amplifier);
-            Chronoception.syncPlayerTimes(player, false);
+            Chronoception.syncPlayerTimes(player);
         }
         return true;
     }
