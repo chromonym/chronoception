@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "chronoception:item/new_moon_dust"
+    }
+}

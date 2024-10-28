@@ -3,6 +3,7 @@ package io.github.chromonym.chronoception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
@@ -25,15 +26,18 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemGroup.Row;
 import net.minecraft.potion.Potion;
+import net.minecraft.recipe.BrewingRecipeRegistry;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -62,9 +66,18 @@ public final class Chronoception {
     public static final DeferredRegister<StatusEffect> STATUS_EFFECTS = DeferredRegister.create(MOD_ID, RegistryKeys.STATUS_EFFECT);
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(MOD_ID, RegistryKeys.POTION);
 
+    public static final RegistrySupplier<Item> TEMPORAL_GEM = ITEMS.register("temporal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> DIURNAL_GEM = ITEMS.register("diurnal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> NOCTURNAL_GEM = ITEMS.register("nocturnal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> CREPUSCULAR_GEM = ITEMS.register("crepuscular_gem", () -> new Item(new Item.Settings()));
+
+    public static final RegistrySupplier<Item> TEMPORAL_DUST = ITEMS.register("temporal_dust", () -> new Item(new Item.Settings()));
+    public static final RegistrySupplier<Item> NEW_MOON_DUST = ITEMS.register("new_moon_dust", () -> new Item(new Item.Settings()));
+    public static final RegistrySupplier<Item> CRESCENT_DUST = ITEMS.register("crescent_moon_dust", () -> new Item(new Item.Settings()));
+    public static final RegistrySupplier<Item> QUARTER_DUST = ITEMS.register("quarter_moon_dust", () -> new Item(new Item.Settings()));
+    public static final RegistrySupplier<Item> GIBBOUS_DUST = ITEMS.register("gibbous_moon_dust", () -> new Item(new Item.Settings()));
+    public static final RegistrySupplier<Item> FULL_MOON_DUST = ITEMS.register("full_moon_dust", () -> new Item(new Item.Settings()));
+
     public static final RegistrySupplier<Item> TRUE_CLOCK = ITEMS.register("true_clock", () -> new Item(new Item.Settings()));
 
     public static final RegistrySupplier<StatusEffect> TIME_SET_DAY = STATUS_EFFECTS.register("to_daytime", () -> new TimeSetEffect(1000L, 0x54BED8));
@@ -115,13 +128,35 @@ public final class Chronoception {
         .displayName(Text.translatable("itemGroup." + MOD_ID + ".tab"))
         .icon(() -> new ItemStack(TRUE_CLOCK.get()))
         .entries((params, output) -> {
+            output.add(TEMPORAL_GEM.get());
             output.add(DIURNAL_GEM.get());
             output.add(NOCTURNAL_GEM.get());
             output.add(CREPUSCULAR_GEM.get());
+            output.add(TEMPORAL_DUST.get());
+            output.add(FULL_MOON_DUST.get());
+            output.add(GIBBOUS_DUST.get());
+            output.add(QUARTER_DUST.get());
+            output.add(CRESCENT_DUST.get());
+            output.add(NEW_MOON_DUST.get());
             output.add(DIURNAL_GHOSTBLOCK_ITEM.get());
             output.add(NOCTURNAL_GHOSTBLOCK_ITEM.get());
             output.add(CREPUSCULAR_GHOSTBLOCK_ITEM.get());
             output.add(TRUE_CLOCK.get());
+
+            // Potions - might want to move this to its own tab?
+            List<Item> potion_items = List.of(Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION, Items.TIPPED_ARROW);
+            List<RegistrySupplier<Potion>> potion_effects = List.of(
+                TIME_SET_DAY_POTION, TIME_SET_NIGHT_POTION, RESYNCHRONISATION_POTION,
+                HOUR_SKIP_POTION, HOUR_SKIP_II_POTION, HOUR_SKIP_IV_POTION, HOUR_SKIP_VIII_POTION,
+                HOUR_REVERSE_POTION, HOUR_REVERSE_II_POTION, HOUR_REVERSE_IV_POTION, HOUR_REVERSE_VIII_POTION,
+                DAY_SKIP_POTION, DAY_SKIP_II_POTION, DAY_SKIP_III_POTION, DAY_SKIP_IV_POTION,
+                DAY_REVERSE_POTION, DAY_REVERSE_II_POTION, DAY_REVERSE_III_POTION, DAY_REVERSE_IV_POTION
+            );
+            potion_items.forEach((item) -> {
+                potion_effects.forEach((effect) -> {
+                    output.add(PotionContentsComponent.createStack(item, Registries.POTION.getEntry(effect.get())));
+                });
+            });
         }).build());
     
     public static void init() {
@@ -211,5 +246,37 @@ public final class Chronoception {
             PlayerTimeData playerData = PlayerStateSaver.getPlayerState(player);
             return (world.getLunarTime() + (long)playerData.offset) % 192000L; // otherwise calc it here
         }
+    }
+
+    public static void registerBrewingRecipes(BrewingRecipeRegistry.Builder builder) {
+        builder.registerRecipes(Chronoception.TEMPORAL_GEM.get(), Registries.POTION.getEntry(Chronoception.RESYNCHRONISATION_POTION.get()));
+        builder.registerRecipes(Chronoception.TEMPORAL_DUST.get(), Registries.POTION.getEntry(Chronoception.RESYNCHRONISATION_POTION.get()));
+        builder.registerRecipes(Chronoception.DIURNAL_GEM.get(), Registries.POTION.getEntry(Chronoception.TIME_SET_DAY_POTION.get()));
+        builder.registerRecipes(Chronoception.NOCTURNAL_GEM.get(), Registries.POTION.getEntry(Chronoception.TIME_SET_NIGHT_POTION.get()));
+
+        builder.registerRecipes(Chronoception.CRESCENT_DUST.get(), Registries.POTION.getEntry(Chronoception.HOUR_SKIP_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HOUR_SKIP_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.HOUR_SKIP_II_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HOUR_SKIP_II_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.HOUR_SKIP_IV_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HOUR_SKIP_IV_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.HOUR_SKIP_VIII_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HOUR_SKIP_POTION.get()), Items.FERMENTED_SPIDER_EYE, Registries.POTION.getEntry(Chronoception.HOUR_REVERSE_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HOUR_SKIP_II_POTION.get()), Items.FERMENTED_SPIDER_EYE, Registries.POTION.getEntry(Chronoception.HOUR_REVERSE_II_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HOUR_SKIP_IV_POTION.get()), Items.FERMENTED_SPIDER_EYE, Registries.POTION.getEntry(Chronoception.HOUR_REVERSE_IV_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HOUR_SKIP_VIII_POTION.get()), Items.FERMENTED_SPIDER_EYE, Registries.POTION.getEntry(Chronoception.HOUR_REVERSE_VIII_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HOUR_REVERSE_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.HOUR_REVERSE_II_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HOUR_REVERSE_II_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.HOUR_REVERSE_IV_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HOUR_REVERSE_IV_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.HOUR_REVERSE_VIII_POTION.get()));
+
+        builder.registerRecipes(Chronoception.GIBBOUS_DUST.get(), Registries.POTION.getEntry(Chronoception.DAY_SKIP_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_SKIP_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DAY_SKIP_II_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_SKIP_II_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DAY_SKIP_III_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_SKIP_III_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DAY_SKIP_IV_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_SKIP_POTION.get()), Items.FERMENTED_SPIDER_EYE, Registries.POTION.getEntry(Chronoception.DAY_REVERSE_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_SKIP_II_POTION.get()), Items.FERMENTED_SPIDER_EYE, Registries.POTION.getEntry(Chronoception.DAY_REVERSE_II_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_SKIP_III_POTION.get()), Items.FERMENTED_SPIDER_EYE, Registries.POTION.getEntry(Chronoception.DAY_REVERSE_III_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_SKIP_IV_POTION.get()), Items.FERMENTED_SPIDER_EYE, Registries.POTION.getEntry(Chronoception.DAY_REVERSE_IV_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_REVERSE_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DAY_REVERSE_II_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_REVERSE_II_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DAY_REVERSE_III_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_REVERSE_III_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DAY_REVERSE_IV_POTION.get()));
+        // other day skip recipes here
     }
 }

@@ -11,9 +11,18 @@
     "effect.chronoception.day_skip": "Day Skip",
     "effect.chronoception.day_reverse": "Day Reverse",
 
+    "item.chronoception.temporal_gem": "Temporal Gem",
     "item.chronoception.diurnal_gem": "Diurnal Gem",
     "item.chronoception.nocturnal_gem": "Nocturnal Gem",
     "item.chronoception.crepuscular_gem": "Crepuscular Gem",
+
+    "item.chronoception.temporal_dust": "Temporal Dust",
+    "item.chronoception.new_moon_dust": "Tenebrous Lunar Dust",
+    "item.chronoception.crescent_moon_dust": "Dark Lunar Dust",
+    "item.chronoception.quarter_moon_dust": "Ambiguous Lunar Dust",
+    "item.chronoception.gibbous_moon_dust": "Bright Lunar Dust",
+    "item.chronoception.full_moon_dust": "Luminous Lunar Dust",
+
     "item.chronoception.true_clock": "True Clock",
 
     "item.minecraft.potion.effect.chronoception_to_daytime": "Potion of Day",
