@@ -19,13 +19,15 @@ public class TimeResetEffect extends InstantStatusEffect {
     
     @Override
     public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
-        ArrayList<StatusEffectInstance> effects = new ArrayList<StatusEffectInstance>();
-        effects.addAll(entity.getStatusEffects()); // copy over the effects so i'm not looping through the actual list *while modifying it*
-        effects.forEach((effect) -> {
-            if((effect.getEffectType().value() instanceof TimeMultiplyEffect || effect.getEffectType().value() instanceof TimeOverrideEffect) && amplifier > 0) {
-                entity.removeStatusEffect(effect.getEffectType());
-            }
-        });
+        if (amplifier > 0) {
+            ArrayList<StatusEffectInstance> effects = new ArrayList<StatusEffectInstance>();
+            effects.addAll(entity.getStatusEffects()); // copy over the effects so i'm not looping through the actual list *while modifying it*
+            effects.forEach((effect) -> {
+                if((effect.getEffectType().value() instanceof TimeMultiplyEffect || effect.getEffectType().value() instanceof TimeOverrideEffect)) {
+                    entity.removeStatusEffect(effect.getEffectType());
+                }
+            });
+        }
         if (entity instanceof ServerPlayerEntity player) {
             PlayerTimeData data = PlayerStateSaver.getPlayerState(player);
             data.offset = 0.0;

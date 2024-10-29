@@ -18,6 +18,7 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import io.github.chromonym.chronoception.blocks.TimeCollisionBlock;
 import io.github.chromonym.chronoception.blocks.TimeLockedBlock;
+import io.github.chromonym.chronoception.blocks.TimeResetCollisionBlock;
 import io.github.chromonym.chronoception.effects.TimeMultiplyEffect;
 import io.github.chromonym.chronoception.effects.TimeOverrideEffect;
 import io.github.chromonym.chronoception.effects.TimeResetEffect;
@@ -143,34 +144,38 @@ public final class Chronoception {
     public static final RegistrySupplier<BlockItem> DIURNAL_GHOSTBLOCK_ITEM = ITEMS.register("diurnal_ghostblock", () -> new BlockItem(DIURNAL_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final RegistrySupplier<TimeLockedBlock> NOCTURNAL_GHOSTBLOCK = BLOCKS.register("nocturnal_ghostblock", () -> new TimeCollisionBlock(
-        AbstractBlock.Settings.copy(Blocks.ORANGE_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
+        AbstractBlock.Settings.copy(Blocks.BLUE_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
         Blocks.BLUE_STAINED_GLASS, NOCTURNAL));
     public static final RegistrySupplier<BlockItem> NOCTURNAL_GHOSTBLOCK_ITEM = ITEMS.register("nocturnal_ghostblock", () -> new BlockItem(NOCTURNAL_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final RegistrySupplier<TimeLockedBlock> FULL_MOON_GHOSTBLOCK = BLOCKS.register("full_moon_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.YELLOW_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
-        Blocks.BLUE_STAINED_GLASS, FULL_MOON));
+        Blocks.YELLOW_STAINED_GLASS, FULL_MOON));
     public static final RegistrySupplier<BlockItem> FULL_MOON_GHOSTBLOCK_ITEM = ITEMS.register("full_moon_ghostblock", () -> new BlockItem(FULL_MOON_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final RegistrySupplier<TimeLockedBlock> GIBBOUS_MOON_GHOSTBLOCK = BLOCKS.register("gibbous_moon_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.YELLOW_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
-        Blocks.BLUE_STAINED_GLASS, GIBBOUS_MOON));
+        Blocks.YELLOW_STAINED_GLASS, GIBBOUS_MOON));
     public static final RegistrySupplier<BlockItem> GIBBOUS_MOON_GHOSTBLOCK_ITEM = ITEMS.register("gibbous_moon_ghostblock", () -> new BlockItem(GIBBOUS_MOON_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final RegistrySupplier<TimeLockedBlock> QUARTER_MOON_GHOSTBLOCK = BLOCKS.register("quarter_moon_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.BROWN_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
-        Blocks.BLUE_STAINED_GLASS, QUARTER_MOON));
+        Blocks.BROWN_STAINED_GLASS, QUARTER_MOON));
     public static final RegistrySupplier<BlockItem> QUARTER_MOON_GHOSTBLOCK_ITEM = ITEMS.register("quarter_moon_ghostblock", () -> new BlockItem(QUARTER_MOON_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final RegistrySupplier<TimeLockedBlock> CRESCENT_MOON_GHOSTBLOCK = BLOCKS.register("crescent_moon_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.BROWN_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
-        Blocks.BLUE_STAINED_GLASS, CRESCENT_MOON));
+        Blocks.BROWN_STAINED_GLASS, CRESCENT_MOON));
     public static final RegistrySupplier<BlockItem> CRESCENT_MOON_GHOSTBLOCK_ITEM = ITEMS.register("crescent_moon_ghostblock", () -> new BlockItem(CRESCENT_MOON_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final RegistrySupplier<TimeLockedBlock> NEW_MOON_GHOSTBLOCK = BLOCKS.register("new_moon_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.BROWN_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
-        Blocks.BLUE_STAINED_GLASS, NEW_MOON));
+        Blocks.BROWN_STAINED_GLASS, NEW_MOON));
     public static final RegistrySupplier<BlockItem> NEW_MOON_GHOSTBLOCK_ITEM = ITEMS.register("new_moon_ghostblock", () -> new BlockItem(NEW_MOON_GHOSTBLOCK.get(), new Item.Settings()));
+
+    public static final RegistrySupplier<Block> RESYNCHRONOUS_GHOSTBLOCK = BLOCKS.register("resynchronous_ghostblock", () -> new TimeResetCollisionBlock(
+        AbstractBlock.Settings.copy(Blocks.GRAY_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false)));
+    public static final RegistrySupplier<BlockItem> RESYNCHRONOUS_GHOSTBLOCK_ITEM = ITEMS.register("resynchronous_ghostblock", () -> new BlockItem(RESYNCHRONOUS_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final Supplier<ItemGroup> CHRONOCEPTION_TAB = ITEM_GROUPS.register("tab", () -> ItemGroup.create(Row.TOP, 0)
         .displayName(Text.translatable("itemGroup." + MOD_ID + ".tab"))
@@ -194,6 +199,7 @@ public final class Chronoception {
             output.add(QUARTER_MOON_GHOSTBLOCK_ITEM.get());
             output.add(CRESCENT_MOON_GHOSTBLOCK_ITEM.get());
             output.add(NEW_MOON_GHOSTBLOCK_ITEM.get());
+            output.add(RESYNCHRONOUS_GHOSTBLOCK_ITEM.get());
             output.add(TRUE_CLOCK.get());
 
             // Potions - might want to move this to its own tab?

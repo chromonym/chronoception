@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "chronoception:block/resynchronous_ghostblock"
+    },
+    "render_type": "minecraft:translucent"
+}

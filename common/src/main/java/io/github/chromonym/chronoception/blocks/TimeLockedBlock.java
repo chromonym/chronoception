@@ -9,6 +9,7 @@ import net.minecraft.block.EntityShapeContext;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -38,10 +39,18 @@ public abstract class TimeLockedBlock extends Block {
     public boolean isValidTime(WorldAccess world, ShapeContext context) {
         long localTime = world.getLevelProperties().getTimeOfDay() % 24000L;
         long localLunarTime = world.getLunarTime() % 192000L;
-        if (context instanceof EntityShapeContext entityContext && world instanceof World ww) {
+        if (context instanceof EntityShapeContext entityContext && world instanceof World ww && entityContext.getEntity() != null) {
             if (entityContext.getEntity() instanceof PlayerEntity player) {
                 localTime = Chronoception.getPercievedTime(ww, player);
                 localLunarTime = Chronoception.getPercievedLunarTime(world, player);
+            } else if (entityContext.getEntity().getControllingPassenger() instanceof PlayerEntity player) {
+                localTime = Chronoception.getPercievedTime(ww, player);
+                localLunarTime = Chronoception.getPercievedLunarTime(world, player);
+            } else if (entityContext.getEntity() instanceof ProjectileEntity projectile) {
+                if (projectile.getOwner() instanceof PlayerEntity player) {
+                    localTime = Chronoception.getPercievedTime(ww, player);
+                    localLunarTime = Chronoception.getPercievedLunarTime(world, player);
+                }
             }
         }
         int lunar = ((int)(localLunarTime / 24000L % 8L + 8L) % 8);
