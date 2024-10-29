@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " X ",
+        "NCD",
+        " E "
+    ],
+    "key": {
+        "C": {
+            "item": "minecraft:clock"
+        },
+        "X": {
+            "item": "chronoception:temporal_gem"
+        },
+        "D": {
+            "item": "chronoception:diurnal_gem"
+        },
+        "E": {
+            "item": "chronoception:crepuscular_gem"
+        },
+        "N": {
+            "item": "chronoception:nocturnal_gem"
+        }
+    },
+    "result": {
+        "id": "chronoception:true_clock",
+        "count": 1
+    }
+}

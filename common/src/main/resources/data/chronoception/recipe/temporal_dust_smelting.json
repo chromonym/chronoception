@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:smelting",
+    "ingredient": {
+        "item": "chronoception:temporal_gem"
+    },
+    "result": {
+        "id": "chronoception:temporal_dust"
+    }
+}

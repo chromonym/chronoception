@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "chronoception:ghostblocks",
+    "pattern": [
+        "XGX",
+        "GXG",
+        "XGX"
+    ],
+    "key": {
+        "X": {
+            "tag": "chronoception:timeless_crafting_materials"
+        },
+        "G": {
+            "tag": "c:glass_blocks"
+        }
+    },
+    "result": {
+        "id": "chronoception:resynchronous_ghostblock",
+        "count": 4
+    }
+}

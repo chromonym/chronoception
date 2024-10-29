@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "GGG",
+        "P P",
+        "P P"
+    ],
+    "key": {
+        "G": {
+            "item": "chronoception:resynchronous_ghostblock"
+        },
+        "P": {
+            "item": "minecraft:quartz_pillar"
+        }
+    },
+    "result": {
+        "id": "chronoception:temporal_table",
+        "count": 1
+    }
+}

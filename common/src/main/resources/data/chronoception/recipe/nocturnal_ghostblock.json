@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "chronoception:ghostblocks",
+    "pattern": [
+        "XGX",
+        "GXG",
+        "XGX"
+    ],
+    "key": {
+        "X": {
+            "item": "chronoception:nocturnal_gem"
+        },
+        "G": {
+            "tag": "c:glass_blocks"
+        }
+    },
+    "result": {
+        "id": "chronoception:nocturnal_ghostblock",
+        "count": 4
+    }
+}

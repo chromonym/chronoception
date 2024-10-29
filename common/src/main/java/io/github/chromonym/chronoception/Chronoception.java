@@ -16,6 +16,7 @@ import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
+import io.github.chromonym.chronoception.blocks.TemporalTableBlock;
 import io.github.chromonym.chronoception.blocks.TimeCollisionBlock;
 import io.github.chromonym.chronoception.blocks.TimeLockedBlock;
 import io.github.chromonym.chronoception.blocks.TimeResetCollisionBlock;
@@ -177,11 +178,16 @@ public final class Chronoception {
         AbstractBlock.Settings.copy(Blocks.GRAY_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false)));
     public static final RegistrySupplier<BlockItem> RESYNCHRONOUS_GHOSTBLOCK_ITEM = ITEMS.register("resynchronous_ghostblock", () -> new BlockItem(RESYNCHRONOUS_GHOSTBLOCK.get(), new Item.Settings()));
 
+    public static final RegistrySupplier<Block> TEMPORAL_TABLE = BLOCKS.register("temporal_table", () -> new TemporalTableBlock(AbstractBlock.Settings.copy(Blocks.QUARTZ_PILLAR)));
+    public static final RegistrySupplier<BlockItem> TEMPORAL_TABLE_ITEM = ITEMS.register("temporal_table", () -> new BlockItem(TEMPORAL_TABLE.get(), new Item.Settings()));
+
     public static final Supplier<ItemGroup> CHRONOCEPTION_TAB = ITEM_GROUPS.register("tab", () -> ItemGroup.create(Row.TOP, 0)
         .displayName(Text.translatable("itemGroup." + MOD_ID + ".tab"))
         .icon(() -> new ItemStack(TRUE_CLOCK.get()))
         .entries((params, output) -> {
             output.add(TEMPORAL_GEM.get());
+            output.add(TEMPORAL_DUST.get());
+            output.add(TEMPORAL_TABLE_ITEM.get());
             output.add(DIURNAL_GEM.get());
             output.add(NOCTURNAL_GEM.get());
             output.add(CREPUSCULAR_GEM.get());
@@ -190,7 +196,7 @@ public final class Chronoception {
             output.add(QUARTER_DUST.get());
             output.add(CRESCENT_DUST.get());
             output.add(NEW_MOON_DUST.get());
-            output.add(TEMPORAL_DUST.get()); // this one's out of order so the gems and dusts line up with their respective ghostblocks
+            output.add(RESYNCHRONOUS_GHOSTBLOCK_ITEM.get());
             output.add(DIURNAL_GHOSTBLOCK_ITEM.get());
             output.add(NOCTURNAL_GHOSTBLOCK_ITEM.get());
             output.add(CREPUSCULAR_GHOSTBLOCK_ITEM.get());
@@ -199,7 +205,6 @@ public final class Chronoception {
             output.add(QUARTER_MOON_GHOSTBLOCK_ITEM.get());
             output.add(CRESCENT_MOON_GHOSTBLOCK_ITEM.get());
             output.add(NEW_MOON_GHOSTBLOCK_ITEM.get());
-            output.add(RESYNCHRONOUS_GHOSTBLOCK_ITEM.get());
             output.add(TRUE_CLOCK.get());
 
             // Potions - might want to move this to its own tab?
