@@ -236,6 +236,9 @@ public final class Chronoception {
                     if (playerData.offset < 0.0) {
                         playerData.offset += 192000.0;
                     }
+                    if (playerData.tickrate != 1.0 && server.getTicks() % 1200 == 0) {
+                        syncPlayerTimes(server.getPlayerManager().getPlayer(uuid));
+                    }
                 });
             }
         });
