@@ -2,6 +2,11 @@
     "block.chronoception.crepuscular_ghostblock": "Crepuscular Ghostblock",
     "block.chronoception.diurnal_ghostblock": "Diurnal Ghostblock",
     "block.chronoception.nocturnal_ghostblock": "Nocturnal Ghostblock",
+    "block.chronoception.new_moon_ghostblock": "Tenebrous Lunar Ghostblock",
+    "block.chronoception.crescent_moon_ghostblock": "Dark Lunar Ghostblock",
+    "block.chronoception.quarter_moon_ghostblock": "Ambiguous Lunar Ghostblock",
+    "block.chronoception.gibbous_moon_ghostblock": "Bright Lunar Ghostblock",
+    "block.chronoception.full_moon_ghostblock": "Luminous Lunar Ghostblock",
 
     "effect.chronoception.to_daytime": "Instant Daytime",
     "effect.chronoception.to_nighttime": "Instant Nighttime",

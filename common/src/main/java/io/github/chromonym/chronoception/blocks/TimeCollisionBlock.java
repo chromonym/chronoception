@@ -14,7 +14,7 @@ import net.minecraft.world.WorldAccess;
 
 public class TimeCollisionBlock extends TimeLockedBlock {
 
-    public TimeCollisionBlock(Settings settings, Block timelessDimensionReplace, BiPredicate<Long, Long> validTime) {
+    public TimeCollisionBlock(Settings settings, Block timelessDimensionReplace, BiPredicate<Long, Integer> validTime) {
         super(settings, timelessDimensionReplace, validTime);
     }
 

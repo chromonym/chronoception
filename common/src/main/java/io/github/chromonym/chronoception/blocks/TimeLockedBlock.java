@@ -17,9 +17,9 @@ import net.minecraft.world.WorldAccess;
 public abstract class TimeLockedBlock extends Block {
 
     private final Block timelessDimensionReplace;
-    public final BiPredicate<Long,Long> validTime;
+    public final BiPredicate<Long,Integer> validTime;
 
-    public TimeLockedBlock(Settings settings, Block timelessDimensionReplace, BiPredicate<Long, Long> validTime) {
+    public TimeLockedBlock(Settings settings, Block timelessDimensionReplace, BiPredicate<Long, Integer> validTime) {
         // validTime is a predicate that takes a long representing time of day (0-24000L) and one representing lunar time (0-192000L) and calculates whether the time is "valid"
         super(settings);
         this.timelessDimensionReplace = timelessDimensionReplace;
@@ -44,7 +44,8 @@ public abstract class TimeLockedBlock extends Block {
                 localLunarTime = Chronoception.getPercievedLunarTime(world, player);
             }
         }
-        return validTime.test(localTime, localLunarTime);
+        int lunar = ((int)(localLunarTime / 24000L % 8L + 8L) % 8);
+        return validTime.test(localTime, lunar);
     }
 
     public Block getTimelessDimensionReplace() {

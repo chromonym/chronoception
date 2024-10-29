@@ -55,9 +55,14 @@ public final class Chronoception {
     public static final String MOD_ID = "chronoception";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public static final BiPredicate<Long,Long> CREPUSCULAR = (local, lunar) -> (local >= 12502L && local <= 13702L) || (local >= 22300L && local <= 23500L); // 1200-tick windows ending/starting when the sun disappears/appears on the horizon
-    public static final BiPredicate<Long,Long> DIURNAL = (local, lunar) -> (local > 23216L || local < 12786L); // solar zenith angle = 0
-    public static final BiPredicate<Long,Long> NOCTURNAL = (local, lunar) -> (local > 12786L && local < 23216L); // solar zenith angle = 0
+    public static final BiPredicate<Long,Integer> CREPUSCULAR = (local, lunar) -> (local >= 12502L && local <= 13702L) || (local >= 22300L && local <= 23500L); // 1200-tick windows ending/starting when the sun disappears/appears on the horizon
+    public static final BiPredicate<Long,Integer> DIURNAL = (local, lunar) -> (local > 23216L || local < 12786L); // solar zenith angle = 0
+    public static final BiPredicate<Long,Integer> NOCTURNAL = (local, lunar) -> (local > 12786L && local < 23216L); // solar zenith angle = 0
+    public static final BiPredicate<Long,Integer> FULL_MOON = (local, lunar) -> (lunar == 0);
+    public static final BiPredicate<Long,Integer> GIBBOUS_MOON = (local, lunar) -> (lunar == 1 || lunar == 7);
+    public static final BiPredicate<Long,Integer> QUARTER_MOON = (local, lunar) -> (lunar == 2 || lunar == 6);
+    public static final BiPredicate<Long,Integer> CRESCENT_MOON = (local, lunar) -> (lunar == 3 || lunar == 5);
+    public static final BiPredicate<Long,Integer> NEW_MOON = (local, lunar) -> (lunar == 4);
 
     //public static final Identifier INITIAL_SYNC = Identifier.of(MOD_ID, "initial_sync");
     public static final Identifier PLAYER_TIME_MODIFIED = Identifier.of(MOD_ID, "player_time_modified");
@@ -142,6 +147,31 @@ public final class Chronoception {
         Blocks.BLUE_STAINED_GLASS, NOCTURNAL));
     public static final RegistrySupplier<BlockItem> NOCTURNAL_GHOSTBLOCK_ITEM = ITEMS.register("nocturnal_ghostblock", () -> new BlockItem(NOCTURNAL_GHOSTBLOCK.get(), new Item.Settings()));
 
+    public static final RegistrySupplier<TimeLockedBlock> FULL_MOON_GHOSTBLOCK = BLOCKS.register("full_moon_ghostblock", () -> new TimeCollisionBlock(
+        AbstractBlock.Settings.copy(Blocks.YELLOW_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
+        Blocks.BLUE_STAINED_GLASS, FULL_MOON));
+    public static final RegistrySupplier<BlockItem> FULL_MOON_GHOSTBLOCK_ITEM = ITEMS.register("full_moon_ghostblock", () -> new BlockItem(FULL_MOON_GHOSTBLOCK.get(), new Item.Settings()));
+
+    public static final RegistrySupplier<TimeLockedBlock> GIBBOUS_MOON_GHOSTBLOCK = BLOCKS.register("gibbous_moon_ghostblock", () -> new TimeCollisionBlock(
+        AbstractBlock.Settings.copy(Blocks.YELLOW_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
+        Blocks.BLUE_STAINED_GLASS, GIBBOUS_MOON));
+    public static final RegistrySupplier<BlockItem> GIBBOUS_MOON_GHOSTBLOCK_ITEM = ITEMS.register("gibbous_moon_ghostblock", () -> new BlockItem(GIBBOUS_MOON_GHOSTBLOCK.get(), new Item.Settings()));
+
+    public static final RegistrySupplier<TimeLockedBlock> QUARTER_MOON_GHOSTBLOCK = BLOCKS.register("quarter_moon_ghostblock", () -> new TimeCollisionBlock(
+        AbstractBlock.Settings.copy(Blocks.BROWN_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
+        Blocks.BLUE_STAINED_GLASS, QUARTER_MOON));
+    public static final RegistrySupplier<BlockItem> QUARTER_MOON_GHOSTBLOCK_ITEM = ITEMS.register("quarter_moon_ghostblock", () -> new BlockItem(QUARTER_MOON_GHOSTBLOCK.get(), new Item.Settings()));
+
+    public static final RegistrySupplier<TimeLockedBlock> CRESCENT_MOON_GHOSTBLOCK = BLOCKS.register("crescent_moon_ghostblock", () -> new TimeCollisionBlock(
+        AbstractBlock.Settings.copy(Blocks.BROWN_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
+        Blocks.BLUE_STAINED_GLASS, CRESCENT_MOON));
+    public static final RegistrySupplier<BlockItem> CRESCENT_MOON_GHOSTBLOCK_ITEM = ITEMS.register("crescent_moon_ghostblock", () -> new BlockItem(CRESCENT_MOON_GHOSTBLOCK.get(), new Item.Settings()));
+
+    public static final RegistrySupplier<TimeLockedBlock> NEW_MOON_GHOSTBLOCK = BLOCKS.register("new_moon_ghostblock", () -> new TimeCollisionBlock(
+        AbstractBlock.Settings.copy(Blocks.BROWN_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
+        Blocks.BLUE_STAINED_GLASS, NEW_MOON));
+    public static final RegistrySupplier<BlockItem> NEW_MOON_GHOSTBLOCK_ITEM = ITEMS.register("new_moon_ghostblock", () -> new BlockItem(NEW_MOON_GHOSTBLOCK.get(), new Item.Settings()));
+
     public static final Supplier<ItemGroup> CHRONOCEPTION_TAB = ITEM_GROUPS.register("tab", () -> ItemGroup.create(Row.TOP, 0)
         .displayName(Text.translatable("itemGroup." + MOD_ID + ".tab"))
         .icon(() -> new ItemStack(TRUE_CLOCK.get()))
@@ -150,15 +180,20 @@ public final class Chronoception {
             output.add(DIURNAL_GEM.get());
             output.add(NOCTURNAL_GEM.get());
             output.add(CREPUSCULAR_GEM.get());
-            output.add(TEMPORAL_DUST.get());
             output.add(FULL_MOON_DUST.get());
             output.add(GIBBOUS_DUST.get());
             output.add(QUARTER_DUST.get());
             output.add(CRESCENT_DUST.get());
             output.add(NEW_MOON_DUST.get());
+            output.add(TEMPORAL_DUST.get()); // this one's out of order so the gems and dusts line up with their respective ghostblocks
             output.add(DIURNAL_GHOSTBLOCK_ITEM.get());
             output.add(NOCTURNAL_GHOSTBLOCK_ITEM.get());
             output.add(CREPUSCULAR_GHOSTBLOCK_ITEM.get());
+            output.add(FULL_MOON_GHOSTBLOCK_ITEM.get());
+            output.add(GIBBOUS_MOON_GHOSTBLOCK_ITEM.get());
+            output.add(QUARTER_MOON_GHOSTBLOCK_ITEM.get());
+            output.add(CRESCENT_MOON_GHOSTBLOCK_ITEM.get());
+            output.add(NEW_MOON_GHOSTBLOCK_ITEM.get());
             output.add(TRUE_CLOCK.get());
 
             // Potions - might want to move this to its own tab?
