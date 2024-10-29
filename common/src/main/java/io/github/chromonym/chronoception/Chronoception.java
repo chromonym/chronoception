@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 
 import dev.architectury.event.events.common.CommandRegistrationEvent;
@@ -237,41 +236,110 @@ public final class Chronoception {
         });
         CommandRegistrationEvent.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(literal("chronoception")
-                .then(argument("player", EntityArgumentType.player())
-                    .then(argument("rate", BoolArgumentType.bool())
+            .then(literal("offset")
+                .executes(context -> {
+                    ServerPlayerEntity player = context.getSource().getPlayer();
+                    if (player != null) {
+                        PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+                        context.getSource().sendFeedback(() -> Text.literal("Current offset: %s".formatted(playerState.offset)), false);
+                        syncPlayerTimes(player);
+                    } else {
+                        context.getSource().sendError(Text.literal("Not a player!"));
+                    }
+                    return 1;
+                }).then(argument("player",EntityArgumentType.player())
+                    .requires(source -> source.hasPermissionLevel(2))
+                    .executes(context -> {
+                        ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+                        if (player != null) {
+                            PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+                            context.getSource().sendFeedback(() -> Text.literal("Current offset: %s".formatted(playerState.offset)), false);
+                            syncPlayerTimes(player);
+                        } else {
+                            context.getSource().sendError(Text.literal("Not a player!"));
+                        }
+                        return 1;
+                    }).then(argument("offset", DoubleArgumentType.doubleArg(0.0, 192000.0))
                         .executes(context -> {
-                            PlayerTimeData playerState = PlayerStateSaver.getPlayerState(EntityArgumentType.getPlayer(context, "player"));
-                            double playerTime;
-                            if (BoolArgumentType.getBool(context, "rate")) {
-                                playerTime = playerState.tickrate;
-                                context.getSource().sendFeedback(() -> Text.literal("Tick rate: %s".formatted(playerTime)), false);
+                            ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+                            if (player != null) {
+                                PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+                                playerState.offset = DoubleArgumentType.getDouble(context, "offset");
+                                context.getSource().sendFeedback(() -> Text.literal("Set %s's offset to %s".formatted(player.getGameProfile().getName(), playerState.offset)), true);
+                                syncPlayerTimes(player);
                             } else {
-                                playerTime = playerState.offset;
-                                context.getSource().sendFeedback(() -> Text.literal("Offset Time: %s".formatted(playerTime)), false);
+                                context.getSource().sendError(Text.literal("Not a player!"));
                             }
-                            syncPlayerTimes(EntityArgumentType.getPlayer(context, "player"));
                             return 1;
                         })
-                        .then(argument("new_value",DoubleArgumentType.doubleArg())
-                            .requires(source -> source.hasPermissionLevel(2))
-                            .executes(context -> {
-                                ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
-                                PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
-                                if (BoolArgumentType.getBool(context, "rate")) {
-                                    playerState.tickrate = DoubleArgumentType.getDouble(context, "new_value");
-                                    playerState.baseTickrate = DoubleArgumentType.getDouble(context, "new_value");
-                                    context.getSource().sendFeedback(() -> Text.literal("Updated tick rate to %s".formatted(playerState.tickrate)), true);
-                                } else {
-                                    playerState.offset = DoubleArgumentType.getDouble(context, "new_value");
-                                    context.getSource().sendFeedback(() -> Text.literal("Updated time offset to %s".formatted(playerState.offset)), true);
-                                }
-                                syncPlayerTimes(player);
-                                return 1;
-                            })
-                        )
                     )
                 )
-            );
+            ).then(literal("tickrate")
+                .executes(context -> {
+                    ServerPlayerEntity player = context.getSource().getPlayer();
+                    if (player != null) {
+                        PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+                        context.getSource().sendFeedback(() -> Text.literal("Current tickrate: %s".formatted(playerState.tickrate)), false);
+                        syncPlayerTimes(player);
+                    } else {
+                        context.getSource().sendError(Text.literal("Not a player!"));
+                    }
+                    return 1;
+                }).then(argument("player",EntityArgumentType.player())
+                    .requires(source -> source.hasPermissionLevel(2))
+                    .executes(context -> {
+                        ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+                        if (player != null) {
+                            PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+                            context.getSource().sendFeedback(() -> Text.literal("Current tickrate: %s".formatted(playerState.tickrate)), false);
+                            syncPlayerTimes(player);
+                        } else {
+                            context.getSource().sendError(Text.literal("Not a player!"));
+                        }
+                        return 1;
+                    }).then(argument("tickrate", DoubleArgumentType.doubleArg(-10000.0,10000.0))
+                        .executes(context -> {
+                            ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+                            if (player != null) {
+                                PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+                                double newTR = DoubleArgumentType.getDouble(context, "tickrate");
+                                playerState.tickrate = newTR;
+                                playerState.baseTickrate = newTR;
+                                context.getSource().sendFeedback(() -> Text.literal("Set %s's tickrate to %s".formatted(player.getGameProfile().getName(), playerState.tickrate)), true);
+                                syncPlayerTimes(player);
+                            } else {
+                                context.getSource().sendError(Text.literal("Not a player!"));
+                            }
+                            return 1;
+                        })
+                    )
+                )
+            ).then(literal("baseTickrate")
+                .executes(context -> {
+                    ServerPlayerEntity player = context.getSource().getPlayer();
+                    if (player != null) {
+                        PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+                        context.getSource().sendFeedback(() -> Text.literal("Current base tickrate: %s".formatted(playerState.baseTickrate)), false);
+                        syncPlayerTimes(player);
+                    } else {
+                        context.getSource().sendError(Text.literal("Not a player!"));
+                    }
+                    return 1;
+                }).then(argument("player",EntityArgumentType.player())
+                    .requires(source -> source.hasPermissionLevel(2))
+                    .executes(context -> {
+                        ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+                        if (player != null) {
+                            PlayerTimeData playerState = PlayerStateSaver.getPlayerState(player);
+                            context.getSource().sendFeedback(() -> Text.literal("Current base tickrate: %s".formatted(playerState.baseTickrate)), false);
+                            syncPlayerTimes(player);
+                        } else {
+                            context.getSource().sendError(Text.literal("Not a player!"));
+                        }
+                        return 1;
+                    })
+                )
+            ));
         });
         TickEvent.Server.SERVER_PRE.register((server) -> {
             if (server.getOverworld().getLevelProperties().getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
