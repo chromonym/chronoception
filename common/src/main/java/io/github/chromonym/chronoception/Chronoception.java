@@ -19,6 +19,7 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import io.github.chromonym.chronoception.blocks.TimeCollisionBlock;
 import io.github.chromonym.chronoception.blocks.TimeLockedBlock;
 import io.github.chromonym.chronoception.effects.TimeMultiplyEffect;
+import io.github.chromonym.chronoception.effects.TimeOverrideEffect;
 import io.github.chromonym.chronoception.effects.TimeResetEffect;
 import io.github.chromonym.chronoception.effects.TimeSetEffect;
 import io.github.chromonym.chronoception.effects.TimeSkipEffect;
@@ -88,13 +89,15 @@ public final class Chronoception {
     public static final RegistrySupplier<StatusEffect> HOUR_REVERSE = STATUS_EFFECTS.register("hour_reverse", () -> new TimeSkipEffect(-1000L, 0x8A0C6F));
     public static final RegistrySupplier<StatusEffect> DAY_SKIP = STATUS_EFFECTS.register("day_skip", () -> new TimeSkipEffect(24000L, 0xC14FEA));
     public static final RegistrySupplier<StatusEffect> DAY_REVERSE = STATUS_EFFECTS.register("day_reverse", () -> new TimeSkipEffect(-24000L, 0xD764AF));
-    public static final RegistrySupplier<TimeMultiplyEffect> DOUBLE_TIME = STATUS_EFFECTS.register("double_time", () -> new TimeMultiplyEffect(2.0, 0x000000)); // TODO colours
-    public static final RegistrySupplier<TimeMultiplyEffect> HALF_TIME = STATUS_EFFECTS.register("half_time", () -> new TimeMultiplyEffect(0.5, 0x000000));
-    public static final RegistrySupplier<TimeMultiplyEffect> REVERSE_TIME = STATUS_EFFECTS.register("reverse_time", () -> new TimeMultiplyEffect(-1.0, 0x000000));
+    public static final RegistrySupplier<TimeMultiplyEffect> DOUBLE_TIME = STATUS_EFFECTS.register("double_time", () -> new TimeMultiplyEffect(2.0, 0xECC759));
+    public static final RegistrySupplier<TimeMultiplyEffect> HALF_TIME = STATUS_EFFECTS.register("half_time", () -> new TimeMultiplyEffect(0.5, 0xBF922A));
+    public static final RegistrySupplier<TimeMultiplyEffect> REVERSE_TIME = STATUS_EFFECTS.register("reverse_time", () -> new TimeMultiplyEffect(-1.0, 0xE0852A));
+    public static final RegistrySupplier<TimeOverrideEffect> FREEZE_TIME = STATUS_EFFECTS.register("freeze_time", () -> new TimeOverrideEffect(0.0, 0x078C7D));
 
     public static final RegistrySupplier<Potion> TIME_SET_DAY_POTION = POTIONS.register("chronoception_to_daytime", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(TIME_SET_DAY.get()))));
     public static final RegistrySupplier<Potion> TIME_SET_NIGHT_POTION = POTIONS.register("chronoception_to_nighttime", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(TIME_SET_NIGHT.get()))));
     public static final RegistrySupplier<Potion> RESYNCHRONISATION_POTION = POTIONS.register("chronoception_resynchronization", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(RESYNCHRONISATION.get()))));
+    public static final RegistrySupplier<Potion> RESYNCHRONISATION_II_POTION = POTIONS.register("chronoception_resynchronization_2", () -> new Potion("chronoception_resynchronization", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(RESYNCHRONISATION.get()), 0, 1)));
     public static final RegistrySupplier<Potion> HOUR_SKIP_POTION = POTIONS.register("chronoception_hour_skip", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_SKIP.get()))));
     public static final RegistrySupplier<Potion> HOUR_SKIP_II_POTION = POTIONS.register("chronoception_hour_skip_2", () -> new Potion("chronoception_hour_skip", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_SKIP.get()), 0, 1)));
     public static final RegistrySupplier<Potion> HOUR_SKIP_IV_POTION = POTIONS.register("chronoception_hour_skip_4", () -> new Potion("chronoception_hour_skip", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HOUR_SKIP.get()), 0, 3)));
@@ -111,6 +114,17 @@ public final class Chronoception {
     public static final RegistrySupplier<Potion> DAY_REVERSE_II_POTION = POTIONS.register("chronoception_day_reverse_2", () -> new Potion("chronoception_day_reverse", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_REVERSE.get()), 0, 1)));
     public static final RegistrySupplier<Potion> DAY_REVERSE_III_POTION = POTIONS.register("chronoception_day_reverse_3", () -> new Potion("chronoception_day_reverse", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_REVERSE.get()), 0, 2)));
     public static final RegistrySupplier<Potion> DAY_REVERSE_IV_POTION = POTIONS.register("chronoception_day_reverse_4", () -> new Potion("chronoception_day_reverse", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DAY_REVERSE.get()), 0, 3)));
+
+    public static final RegistrySupplier<Potion> DOUBLE_TIME_POTION = POTIONS.register("chronoception_double_time", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DOUBLE_TIME.get()), 3600)));
+    public static final RegistrySupplier<Potion> DOUBLE_TIME_II_POTION = POTIONS.register("chronoception_double_time_2", () -> new Potion("chronoception_double_time", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DOUBLE_TIME.get()), 3600, 1)));
+    public static final RegistrySupplier<Potion> DOUBLE_TIME_III_POTION = POTIONS.register("chronoception_double_time_3", () -> new Potion("chronoception_double_time", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DOUBLE_TIME.get()), 3600, 2)));
+    public static final RegistrySupplier<Potion> DOUBLE_TIME_IV_POTION = POTIONS.register("chronoception_double_time_4", () -> new Potion("chronoception_double_time", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(DOUBLE_TIME.get()), 3600, 3)));
+    public static final RegistrySupplier<Potion> HALF_TIME_POTION = POTIONS.register("chronoception_half_time", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HALF_TIME.get()), 3600)));
+    public static final RegistrySupplier<Potion> HALF_TIME_II_POTION = POTIONS.register("chronoception_half_time_2", () -> new Potion("chronoception_half_time", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HALF_TIME.get()), 3600, 1)));
+    public static final RegistrySupplier<Potion> HALF_TIME_III_POTION = POTIONS.register("chronoception_half_time_3", () -> new Potion("chronoception_half_time", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HALF_TIME.get()), 3600, 2)));
+    public static final RegistrySupplier<Potion> HALF_TIME_IV_POTION = POTIONS.register("chronoception_half_time_4", () -> new Potion("chronoception_half_time", new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(HALF_TIME.get()), 3600, 3)));
+    public static final RegistrySupplier<Potion> REVERSE_TIME_POTION = POTIONS.register("chronoception_reverse_time", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(REVERSE_TIME.get()), 3600)));
+    public static final RegistrySupplier<Potion> FREEZE_TIME_POTION = POTIONS.register("chronoception_freeze_time", () -> new Potion(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(FREEZE_TIME.get()), 3600)));
 
     public static final RegistrySupplier<TimeLockedBlock> CREPUSCULAR_GHOSTBLOCK = BLOCKS.register("crepuscular_ghostblock", () -> new TimeCollisionBlock(
         AbstractBlock.Settings.copy(Blocks.ORANGE_STAINED_GLASS).nonOpaque().solidBlock((var1, var2, var3) -> false).suffocates((var1, var2, var3) -> false).blockVision((var1, var2, var3) -> false),
@@ -150,11 +164,14 @@ public final class Chronoception {
             // Potions - might want to move this to its own tab?
             List<Item> potion_items = List.of(Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION, Items.TIPPED_ARROW);
             List<RegistrySupplier<Potion>> potion_effects = List.of(
-                TIME_SET_DAY_POTION, TIME_SET_NIGHT_POTION, RESYNCHRONISATION_POTION,
+                RESYNCHRONISATION_POTION, RESYNCHRONISATION_II_POTION, TIME_SET_DAY_POTION, TIME_SET_NIGHT_POTION,
                 HOUR_SKIP_POTION, HOUR_SKIP_II_POTION, HOUR_SKIP_IV_POTION, HOUR_SKIP_VIII_POTION,
                 HOUR_REVERSE_POTION, HOUR_REVERSE_II_POTION, HOUR_REVERSE_IV_POTION, HOUR_REVERSE_VIII_POTION,
                 DAY_SKIP_POTION, DAY_SKIP_II_POTION, DAY_SKIP_III_POTION, DAY_SKIP_IV_POTION,
-                DAY_REVERSE_POTION, DAY_REVERSE_II_POTION, DAY_REVERSE_III_POTION, DAY_REVERSE_IV_POTION
+                DAY_REVERSE_POTION, DAY_REVERSE_II_POTION, DAY_REVERSE_III_POTION, DAY_REVERSE_IV_POTION,
+                DOUBLE_TIME_POTION, DOUBLE_TIME_II_POTION, DOUBLE_TIME_III_POTION, DOUBLE_TIME_IV_POTION,
+                HALF_TIME_POTION, HALF_TIME_II_POTION, HALF_TIME_III_POTION, HALF_TIME_IV_POTION,
+                REVERSE_TIME_POTION, FREEZE_TIME_POTION
             );
             potion_items.forEach((item) -> {
                 potion_effects.forEach((effect) -> {
@@ -255,7 +272,7 @@ public final class Chronoception {
 
     public static void registerBrewingRecipes(BrewingRecipeRegistry.Builder builder) {
         builder.registerRecipes(Chronoception.TEMPORAL_GEM.get(), Registries.POTION.getEntry(Chronoception.RESYNCHRONISATION_POTION.get()));
-        builder.registerRecipes(Chronoception.TEMPORAL_DUST.get(), Registries.POTION.getEntry(Chronoception.RESYNCHRONISATION_POTION.get()));
+        builder.registerRecipes(Chronoception.TEMPORAL_DUST.get(), Registries.POTION.getEntry(Chronoception.RESYNCHRONISATION_II_POTION.get()));
         builder.registerRecipes(Chronoception.DIURNAL_GEM.get(), Registries.POTION.getEntry(Chronoception.TIME_SET_DAY_POTION.get()));
         builder.registerRecipes(Chronoception.NOCTURNAL_GEM.get(), Registries.POTION.getEntry(Chronoception.TIME_SET_NIGHT_POTION.get()));
 
@@ -282,6 +299,18 @@ public final class Chronoception {
         builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_REVERSE_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DAY_REVERSE_II_POTION.get()));
         builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_REVERSE_II_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DAY_REVERSE_III_POTION.get()));
         builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DAY_REVERSE_III_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DAY_REVERSE_IV_POTION.get()));
-        // other day skip recipes here
+
+        builder.registerRecipes(Chronoception.FULL_MOON_DUST.get(), Registries.POTION.getEntry(Chronoception.DOUBLE_TIME_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DOUBLE_TIME_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DOUBLE_TIME_II_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DOUBLE_TIME_II_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DOUBLE_TIME_III_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.DOUBLE_TIME_III_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.DOUBLE_TIME_IV_POTION.get()));
+
+        builder.registerRecipes(Chronoception.QUARTER_DUST.get(), Registries.POTION.getEntry(Chronoception.HALF_TIME_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HALF_TIME_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.HALF_TIME_II_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HALF_TIME_II_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.HALF_TIME_III_POTION.get()));
+        builder.registerPotionRecipe(Registries.POTION.getEntry(Chronoception.HALF_TIME_III_POTION.get()), Items.GLOWSTONE_DUST, Registries.POTION.getEntry(Chronoception.HALF_TIME_IV_POTION.get()));
+
+        builder.registerRecipes(Chronoception.CREPUSCULAR_GEM.get(), Registries.POTION.getEntry(Chronoception.REVERSE_TIME_POTION.get()));
+        builder.registerRecipes(Chronoception.NEW_MOON_DUST.get(), Registries.POTION.getEntry(Chronoception.FREEZE_TIME_POTION.get()));
     }
 }
