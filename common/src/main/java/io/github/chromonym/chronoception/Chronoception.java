@@ -24,6 +24,7 @@ import io.github.chromonym.chronoception.effects.TimeOverrideEffect;
 import io.github.chromonym.chronoception.effects.TimeResetEffect;
 import io.github.chromonym.chronoception.effects.TimeSetEffect;
 import io.github.chromonym.chronoception.effects.TimeSkipEffect;
+import io.github.chromonym.chronoception.items.StopwatchItem;
 import io.github.chromonym.chronoception.networking.PlayerTimePayload;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -87,6 +88,7 @@ public final class Chronoception {
     public static final RegistrySupplier<Item> FULL_MOON_DUST = ITEMS.register("full_moon_dust", () -> new Item(new Item.Settings()));
 
     public static final RegistrySupplier<Item> TRUE_CLOCK = ITEMS.register("true_clock", () -> new Item(new Item.Settings()));
+    public static final RegistrySupplier<StopwatchItem> STOPWATCH = ITEMS.register("stopwatch", () -> new StopwatchItem(new Item.Settings(), 50.0));
 
     public static final RegistrySupplier<StatusEffect> TIME_SET_DAY = STATUS_EFFECTS.register("to_daytime", () -> new TimeSetEffect(1000L, 0x54BED8));
     public static final RegistrySupplier<StatusEffect> TIME_SET_NIGHT = STATUS_EFFECTS.register("to_nighttime", () -> new TimeSetEffect(13000L, 0x121851));
