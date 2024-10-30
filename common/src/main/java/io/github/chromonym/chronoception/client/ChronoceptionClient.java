@@ -54,6 +54,42 @@ public class ChronoceptionClient {
         }
     };
 
+    public static ClampedModelPredicateProvider stopwatchProvider = new ClampedModelPredicateProvider(){
+        private double time;
+        private double step;
+        private long lastTick;
+
+        @Override
+        public float unclampedCall(ItemStack itemStack, @Nullable ClientWorld clientWorld, @Nullable LivingEntity livingEntity, int i) {
+            Entity entity;
+            Entity entity2 = entity = livingEntity != null ? livingEntity : itemStack.getHolder();
+            if (entity == null) {
+                return 0.0f;
+            }
+            if (clientWorld == null && entity.getWorld() instanceof ClientWorld) {
+                clientWorld = (ClientWorld)entity.getWorld();
+            }
+            if (clientWorld == null) {
+                return 0.0f;
+            }
+            double d = clientWorld.getDimension().natural() ? (double)clientWorld.getDimension().getSkyAngle(clientWorld.getLunarTime()) : Math.random();
+            d = this.getTime(clientWorld, d);
+            return (float)d;
+        }
+
+        private double getTime(World world, double skyAngle) {
+            if (world.getTime() != this.lastTick) {
+                this.lastTick = world.getTime();
+                double d = skyAngle - this.time;
+                d = MathHelper.floorMod(d + 0.5, 1.0) - 0.5;
+                this.step += d * 0.1;
+                this.step *= 0.9;
+                this.time = MathHelper.floorMod(this.time + this.step, 1.0);
+            }
+            return this.time;
+        }
+    };
+
     public static void init() {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, PlayerTimePayload.ID, PlayerTimePayload.CODEC, (payload, context) -> {
             Chronoception.LOGGER.info("Client-stored times - Offset: %s, Rate: %s, Base rate: %s".formatted(playerData.offset, playerData.tickrate, playerData.baseTickrate));

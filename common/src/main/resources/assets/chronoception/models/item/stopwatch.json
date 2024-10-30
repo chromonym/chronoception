@@ -1,0 +1,25 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "chronoception:item/stopwatch/00"
+    },
+    "overrides": [
+        { "predicate": { "time": 0.0000000 }, "model": "chronoception:item/stopwatch" },
+        { "predicate": { "time": 0.0546875 }, "model": "chronoception:item/stopwatch/01" },
+        { "predicate": { "time": 0.1171875 }, "model": "chronoception:item/stopwatch/02" },
+        { "predicate": { "time": 0.1796875 }, "model": "chronoception:item/stopwatch/03" },
+        { "predicate": { "time": 0.2421875 }, "model": "chronoception:item/stopwatch/04" },
+        { "predicate": { "time": 0.3046875 }, "model": "chronoception:item/stopwatch/05" },
+        { "predicate": { "time": 0.3671875 }, "model": "chronoception:item/stopwatch/06" },
+        { "predicate": { "time": 0.4296875 }, "model": "chronoception:item/stopwatch/07" },
+        { "predicate": { "time": 0.4921875 }, "model": "chronoception:item/stopwatch/08" },
+        { "predicate": { "time": 0.5546875 }, "model": "chronoception:item/stopwatch/09" },
+        { "predicate": { "time": 0.6171875 }, "model": "chronoception:item/stopwatch/10" },
+        { "predicate": { "time": 0.6796875 }, "model": "chronoception:item/stopwatch/11" },
+        { "predicate": { "time": 0.7421875 }, "model": "chronoception:item/stopwatch/12" },
+        { "predicate": { "time": 0.8046875 }, "model": "chronoception:item/stopwatch/13" },
+        { "predicate": { "time": 0.8671875 }, "model": "chronoception:item/stopwatch/14" },
+        { "predicate": { "time": 0.9296875 }, "model": "chronoception:item/stopwatch/15" },
+        { "predicate": { "time": 0.9921875 }, "model": "chronoception:item/stopwatch" }
+    ]
+}

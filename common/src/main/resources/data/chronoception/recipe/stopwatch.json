@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "GFG",
+        "QXQ",
+        "CNC"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:clock"
+        },
+        "F": {
+            "item": "chronoception:full_moon_dust"
+        },
+        "G": {
+            "item": "chronoception:gibbous_moon_dust"
+        },
+        "Q": {
+            "item": "chronoception:quarter_moon_dust"
+        },
+        "C": {
+            "item": "chronoception:crescent_moon_dust"
+        },
+        "N": {
+            "item": "chronoception:new_moon_dust"
+        }
+    },
+    "result": {
+        "id": "chronoception:stopwatch",
+        "count": 1
+    }
+}

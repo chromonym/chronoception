@@ -47,6 +47,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.LunarWorldView;
 import net.minecraft.world.World;
@@ -88,7 +89,7 @@ public final class Chronoception {
     public static final RegistrySupplier<Item> FULL_MOON_DUST = ITEMS.register("full_moon_dust", () -> new Item(new Item.Settings()));
 
     public static final RegistrySupplier<Item> TRUE_CLOCK = ITEMS.register("true_clock", () -> new Item(new Item.Settings()));
-    public static final RegistrySupplier<StopwatchItem> STOPWATCH = ITEMS.register("stopwatch", () -> new StopwatchItem(new Item.Settings(), 50.0));
+    public static final RegistrySupplier<StopwatchItem> STOPWATCH = ITEMS.register("stopwatch", () -> new StopwatchItem(new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON), 75.0));
 
     public static final RegistrySupplier<StatusEffect> TIME_SET_DAY = STATUS_EFFECTS.register("to_daytime", () -> new TimeSetEffect(1000L, 0x54BED8));
     public static final RegistrySupplier<StatusEffect> TIME_SET_NIGHT = STATUS_EFFECTS.register("to_nighttime", () -> new TimeSetEffect(13000L, 0x121851));
@@ -207,6 +208,7 @@ public final class Chronoception {
             output.add(CRESCENT_MOON_GHOSTBLOCK_ITEM.get());
             output.add(NEW_MOON_GHOSTBLOCK_ITEM.get());
             output.add(TRUE_CLOCK.get());
+            output.add(STOPWATCH.get());
 
             // Potions - might want to move this to its own tab?
             List<Item> potion_items = List.of(Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION, Items.TIPPED_ARROW);

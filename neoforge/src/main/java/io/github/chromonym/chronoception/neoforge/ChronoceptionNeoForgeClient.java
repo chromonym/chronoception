@@ -15,6 +15,7 @@ public class ChronoceptionNeoForgeClient {
         ChronoceptionClient.init();
         ClientLifecycleEvent.CLIENT_SETUP.register((client) -> {
             ItemPropertiesRegistry.register(Chronoception.TRUE_CLOCK.get(), Identifier.ofVanilla("server_time"), ChronoceptionClient.trueClockProvider);
+            ItemPropertiesRegistry.register(Chronoception.STOPWATCH.get(), Identifier.ofVanilla("time"), ChronoceptionClient.stopwatchProvider);
         });
     }
 }

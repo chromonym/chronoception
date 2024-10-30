@@ -35,6 +35,8 @@
     "item.chronoception.full_moon_dust": "Luminous Lunar Dust",
 
     "item.chronoception.true_clock": "True Clock",
+    "item.chronoception.stopwatch": "Stopwatch",
+    "item.chronoception.stopwatch.tooltip": "Sneak to rewind instead",
 
     "item.minecraft.potion.effect.chronoception_to_daytime": "Potion of Day",
     "item.minecraft.splash_potion.effect.chronoception_to_daytime": "Splash Potion of Day",

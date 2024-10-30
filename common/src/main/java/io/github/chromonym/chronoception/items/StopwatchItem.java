@@ -1,5 +1,7 @@
 package io.github.chromonym.chronoception.items;
 
+import java.util.List;
+
 import io.github.chromonym.chronoception.Chronoception;
 import io.github.chromonym.chronoception.PlayerStateSaver;
 import io.github.chromonym.chronoception.PlayerTimeData;
@@ -9,7 +11,10 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -24,12 +29,21 @@ public class StopwatchItem extends Item {
     }
 
     @Override
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        tooltip.add(Text.translatable(this.getTranslationKey().concat(".tooltip")).formatted(Formatting.GRAY));
+    }
+
+    @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         user.setCurrentHand(hand);
         if (user instanceof ServerPlayerEntity player) {
             PlayerTimeData data = PlayerStateSaver.getPlayerState(player);
-            data.tickrate = overrideTime;
+            if (player.isSneaking()) {
+                data.tickrate = -overrideTime;
+            } else {
+                data.tickrate = overrideTime;
+            }
             Chronoception.syncPlayerTimes(player);
         }
         return TypedActionResult.consume(itemStack);

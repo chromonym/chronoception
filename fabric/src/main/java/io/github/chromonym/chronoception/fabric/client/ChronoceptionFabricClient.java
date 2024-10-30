@@ -23,5 +23,6 @@ public final class ChronoceptionFabricClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(Chronoception.NEW_MOON_GHOSTBLOCK.get(), RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(Chronoception.RESYNCHRONOUS_GHOSTBLOCK.get(), RenderLayer.getTranslucent());
         ModelPredicateProviderRegistry.register(Chronoception.TRUE_CLOCK.get(), Identifier.ofVanilla("server_time"), ChronoceptionClient.trueClockProvider);
+        ModelPredicateProviderRegistry.register(Chronoception.STOPWATCH.get(), Identifier.ofVanilla("time"), ChronoceptionClient.stopwatchProvider);
     }
 }
