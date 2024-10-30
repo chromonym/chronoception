@@ -95,5 +95,16 @@
 
     "potion.potency.7": "VIII",
 
-    "itemGroup.chronoception.tab": "Chronoception"
+    "itemGroup.chronoception.tab": "Chronoception",
+
+    "tag.item.chronoception.timeless_crafting_materials": "Temporal Materials",
+    "emi.category.chronoception.temporal_infusing": "Temporal Infusing",
+    "emi.chronoception./temporal_infusing/diurnal.desc": "During the day",
+    "emi.chronoception./temporal_infusing/crepuscular.desc": "During dawn or dusk",
+    "emi.chronoception./temporal_infusing/nocturnal.desc": "During the night",
+    "emi.chronoception./temporal_infusing/full_moon.desc": "During a full moon",
+    "emi.chronoception./temporal_infusing/gibbous_moon.desc": "During a gibbous moon",
+    "emi.chronoception./temporal_infusing/quarter_moon.desc": "During a quarter moon",
+    "emi.chronoception./temporal_infusing/crescent_moon.desc": "During a crescent moon",
+    "emi.chronoception./temporal_infusing/new_moon.desc": "During a new moon"
 }

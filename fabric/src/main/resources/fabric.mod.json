@@ -24,6 +24,9 @@
     ],
     "server": [
       "io.github.chromonym.chronoception.fabric.ChronoceptionFabricServer"
+    ],
+    "emi": [
+      "io.github.chromonym.chronoception.fabric.client.ChronoceptionFabricEmi"
     ]
   },
   "mixins": [
