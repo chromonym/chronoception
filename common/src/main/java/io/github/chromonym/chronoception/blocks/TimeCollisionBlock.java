@@ -48,32 +48,4 @@ public class TimeCollisionBlock extends TimeLockedBlock {
         }
         return super.isSideInvisible(state, stateFrom, direction);
     }
-
-    /*@Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (world.isClient()) {
-            if (world instanceof ClientWorld && !validTime.test(world.getTimeOfDay(), world.getLunarTime())) {
-                / * for (int i = 0; i < 4; ++i) {
-                //ParticleUtil.spawnParticlesAround(world, pos, 3, 0.6, 1.0, true, ParticleTypes.ELECTRIC_SPARK);
-                    double d = random.nextGaussian() * 0.04;
-                    double e = random.nextGaussian() * 0.04;
-                    double f = random.nextGaussian() * 0.04;
-                    double h = (double)pos.getX() - 0.2 + random.nextDouble() * 1.4;
-                    double j = (double)pos.getY() - 0.2 + random.nextDouble() * 1.4;
-                    double k = (double)pos.getZ() - 0.2 + random.nextDouble() * 1.4;
-                    world.addParticle(ParticleTypes.FIREWORK, h, j, k, d, e, f);
-                } * /
-                world.addParticle(ParticleTypes.ELECTRIC_SPARK, (double)pos.getX(), (double)pos.getY()+1.0, (double)pos.getZ(), 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.ELECTRIC_SPARK, (double)pos.getX()+1.0, (double)pos.getY()+1.0, (double)pos.getZ(), 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.ELECTRIC_SPARK, (double)pos.getX()+1.0, (double)pos.getY()+1.0, (double)pos.getZ()+1.0, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.ELECTRIC_SPARK, (double)pos.getX(), (double)pos.getY()+1.0, (double)pos.getZ()+1.0, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.ELECTRIC_SPARK, (double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.ELECTRIC_SPARK, (double)pos.getX()+1.0, (double)pos.getY(), (double)pos.getZ(), 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.ELECTRIC_SPARK, (double)pos.getX()+1.0, (double)pos.getY(), (double)pos.getZ()+1.0, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.ELECTRIC_SPARK, (double)pos.getX(), (double)pos.getY(), (double)pos.getZ()+1.0, 0.0, 0.0, 0.0);
-            }
-        }
-        super.randomDisplayTick(state, world, pos, random);
-    }*/
-
 }
