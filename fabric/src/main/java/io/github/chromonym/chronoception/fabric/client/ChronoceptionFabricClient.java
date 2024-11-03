@@ -2,8 +2,10 @@ package io.github.chromonym.chronoception.fabric.client;
 
 import io.github.chromonym.chronoception.Chronoception;
 import io.github.chromonym.chronoception.client.ChronoceptionClient;
+import io.github.chromonym.chronoception.client.screens.TemporalTableScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
@@ -24,5 +26,6 @@ public final class ChronoceptionFabricClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(Chronoception.RESYNCHRONOUS_GHOSTBLOCK.get(), RenderLayer.getTranslucent());
         ModelPredicateProviderRegistry.register(Chronoception.TRUE_CLOCK.get(), Identifier.ofVanilla("server_time"), ChronoceptionClient.trueClockProvider);
         ModelPredicateProviderRegistry.register(Chronoception.STOPWATCH.get(), Identifier.ofVanilla("time"), ChronoceptionClient.stopwatchProvider);
+        HandledScreens.register(Chronoception.TEMPORAL_TABLE_SCREEN_HANDLER.get(), TemporalTableScreen::new);
     }
 }

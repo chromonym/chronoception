@@ -15,6 +15,7 @@ import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
+import io.github.chromonym.chronoception.blockentities.TemporalTableBlockEntity;
 import io.github.chromonym.chronoception.blocks.TemporalTableBlock;
 import io.github.chromonym.chronoception.blocks.TimeCollisionBlock;
 import io.github.chromonym.chronoception.blocks.TimeLockedBlock;
@@ -26,9 +27,11 @@ import io.github.chromonym.chronoception.effects.TimeSetEffect;
 import io.github.chromonym.chronoception.effects.TimeSkipEffect;
 import io.github.chromonym.chronoception.items.StopwatchItem;
 import io.github.chromonym.chronoception.networking.PlayerTimePayload;
+import io.github.chromonym.chronoception.screenhandlers.TemporalTableScreenHandler;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.entity.effect.StatusEffect;
@@ -44,6 +47,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.recipe.BrewingRecipeRegistry;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.resource.featuretoggle.FeatureSet;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -72,9 +77,11 @@ public final class Chronoception {
     
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(MOD_ID, RegistryKeys.BLOCK);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(MOD_ID, RegistryKeys.BLOCK_ENTITY_TYPE);
     public static final DeferredRegister<ItemGroup> ITEM_GROUPS = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
     public static final DeferredRegister<StatusEffect> STATUS_EFFECTS = DeferredRegister.create(MOD_ID, RegistryKeys.STATUS_EFFECT);
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(MOD_ID, RegistryKeys.POTION);
+    public static final DeferredRegister<ScreenHandlerType<?>> SCREEN_HANDLERS = DeferredRegister.create(MOD_ID, RegistryKeys.SCREEN_HANDLER);
 
     public static final RegistrySupplier<Item> TEMPORAL_GEM = ITEMS.register("temporal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> DIURNAL_GEM = ITEMS.register("diurnal_gem", () -> new Item(new Item.Settings()));
@@ -180,7 +187,9 @@ public final class Chronoception {
     public static final RegistrySupplier<BlockItem> RESYNCHRONOUS_GHOSTBLOCK_ITEM = ITEMS.register("resynchronous_ghostblock", () -> new BlockItem(RESYNCHRONOUS_GHOSTBLOCK.get(), new Item.Settings()));
 
     public static final RegistrySupplier<Block> TEMPORAL_TABLE = BLOCKS.register("temporal_table", () -> new TemporalTableBlock(AbstractBlock.Settings.copy(Blocks.QUARTZ_PILLAR)));
+    public static final RegistrySupplier<BlockEntityType<TemporalTableBlockEntity>> TEMPORAL_TABLE_ENTITY = BLOCK_ENTITIES.register("temporal_table", () -> BlockEntityType.Builder.create(TemporalTableBlockEntity::new, TEMPORAL_TABLE.get()).build(null));
     public static final RegistrySupplier<BlockItem> TEMPORAL_TABLE_ITEM = ITEMS.register("temporal_table", () -> new BlockItem(TEMPORAL_TABLE.get(), new Item.Settings()));
+    public static final RegistrySupplier<ScreenHandlerType<TemporalTableScreenHandler>> TEMPORAL_TABLE_SCREEN_HANDLER = SCREEN_HANDLERS.register("temporal_table", () -> new ScreenHandlerType<TemporalTableScreenHandler>(TemporalTableScreenHandler::new, FeatureSet.empty()));
 
     public static final Supplier<ItemGroup> CHRONOCEPTION_TAB = ITEM_GROUPS.register("tab", () -> ItemGroup.create(Row.TOP, 0)
         .displayName(Text.translatable("itemGroup." + MOD_ID + ".tab"))
@@ -188,7 +197,7 @@ public final class Chronoception {
         .entries((params, output) -> {
             output.add(TEMPORAL_GEM.get());
             output.add(TEMPORAL_DUST.get());
-            output.add(TEMPORAL_TABLE_ITEM.get());
+            //output.add(TEMPORAL_TABLE_ITEM.get());
             output.add(DIURNAL_GEM.get());
             output.add(NOCTURNAL_GEM.get());
             output.add(CREPUSCULAR_GEM.get());
@@ -229,7 +238,9 @@ public final class Chronoception {
         }).build());
     
     public static void init() {
+        SCREEN_HANDLERS.register();
         BLOCKS.register();
+        BLOCK_ENTITIES.register();
         ITEMS.register();
         ITEM_GROUPS.register();
         STATUS_EFFECTS.register();
