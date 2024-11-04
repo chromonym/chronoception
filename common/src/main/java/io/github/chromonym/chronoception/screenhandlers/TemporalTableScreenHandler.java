@@ -6,21 +6,26 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ArrayPropertyDelegate;
+import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 public class TemporalTableScreenHandler extends ScreenHandler {
     private final Inventory inventory;
+    PropertyDelegate propertyDelegate;
 
     public TemporalTableScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(1));
+        this(syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(1));
     }
 
-    public TemporalTableScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+    public TemporalTableScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(Chronoception.TEMPORAL_TABLE_SCREEN_HANDLER.get(), syncId);
         checkSize(inventory, 1);
         this.inventory = inventory;
+        this.propertyDelegate = propertyDelegate;
         inventory.onOpen(playerInventory.player);
+        this.addProperties(propertyDelegate);
         int m;
         int l;
         // Our inventory
@@ -35,6 +40,10 @@ public class TemporalTableScreenHandler extends ScreenHandler {
         for (m = 0; m < 9; ++m) {
             this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
         }
+    }
+
+    public int getProgress() {
+        return propertyDelegate.get(0);
     }
 
     @Override

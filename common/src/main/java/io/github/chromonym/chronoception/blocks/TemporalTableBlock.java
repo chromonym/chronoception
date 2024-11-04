@@ -7,6 +7,7 @@ import io.github.chromonym.chronoception.blockentities.TemporalTableBlockEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -17,6 +18,9 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class TemporalTableBlock extends BlockWithEntity {
@@ -50,7 +54,9 @@ public class TemporalTableBlock extends BlockWithEntity {
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient()) {
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
-
+            if (world.getBlockEntity(pos) instanceof TemporalTableBlockEntity blockEntity) {
+                blockEntity.recentInteract = player.getUuid();
+            }
             if (screenHandlerFactory != null) {
                 //MenuRegistry.openMenu((ServerPlayerEntity)player, screenHandlerFactory);
                 player.openHandledScreen(screenHandlerFactory);
@@ -79,6 +85,15 @@ public class TemporalTableBlock extends BlockWithEntity {
     @Override
     protected int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+    }
+
+    @Override
+    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        return VoxelShapes.union(VoxelShapes.cuboid(0.0f, 0.875f, 0.0f, 1.0f, 1.0f, 1.0f), 
+        VoxelShapes.cuboid(0.0f, 0.0f, 0.0f, 0.125f, 1.0f, 0.125f),
+        VoxelShapes.cuboid(0.0f, 0.0f, 0.875f, 0.125f, 1.0f, 1.0f),
+        VoxelShapes.cuboid(0.875f, 0.0f, 0.0f, 1.0f, 1.0f, 0.125f),
+        VoxelShapes.cuboid(0.875f, 0.0f, 0.875f, 1.0f, 1.0f, 1.0f));
     }
     
 }

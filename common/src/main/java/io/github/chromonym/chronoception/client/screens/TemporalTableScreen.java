@@ -12,11 +12,12 @@ import net.minecraft.util.Identifier;
 
 public class TemporalTableScreen extends HandledScreen<TemporalTableScreenHandler> {
 
-    private static final Identifier TEXTURE = Identifier.ofVanilla("textures/gui/container/dispenser.png");
-    // TODO use a custom texture
+    private static final Identifier TEXTURE = Identifier.ofVanilla("textures/gui/container/dispenser.png"); // TODO use a custom texture
+    TemporalTableScreenHandler screenHandler;
 
     public TemporalTableScreen(TemporalTableScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
+        screenHandler = handler;
     }
 
     @Override
@@ -31,6 +32,7 @@ public class TemporalTableScreen extends HandledScreen<TemporalTableScreenHandle
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        context.drawText(textRenderer, Integer.toString(screenHandler.getProgress()), 0, 0, 65280, true);
         renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
         drawMouseoverTooltip(context, mouseX, mouseY);

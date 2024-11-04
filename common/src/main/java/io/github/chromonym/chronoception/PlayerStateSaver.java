@@ -63,4 +63,14 @@ public class PlayerStateSaver extends PersistentState {
         Chronoception.LOGGER.warn("getPlayerState called for offline player or nonexistant mob! Returning dummy data instead!");
         return new PlayerTimeData(); // woops
     }
+
+    public static PlayerTimeData getPlayerState(UUID player, World world) {
+        if (player != null) {
+            PlayerStateSaver serverState = getServerState(world.getServer());
+            PlayerTimeData playerState = serverState.players.computeIfAbsent(player, uuid -> new PlayerTimeData());
+            return playerState;
+        }
+        Chronoception.LOGGER.warn("getPlayerState called for nonexistant UUID! Returning dummy data instead!");
+        return new PlayerTimeData(); // woops
+    }
 }

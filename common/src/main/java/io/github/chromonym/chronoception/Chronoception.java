@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
@@ -197,7 +198,7 @@ public final class Chronoception {
         .entries((params, output) -> {
             output.add(TEMPORAL_GEM.get());
             output.add(TEMPORAL_DUST.get());
-            //output.add(TEMPORAL_TABLE_ITEM.get());
+            output.add(TEMPORAL_TABLE_ITEM.get());
             output.add(DIURNAL_GEM.get());
             output.add(NOCTURNAL_GEM.get());
             output.add(CREPUSCULAR_GEM.get());
@@ -394,11 +395,29 @@ public final class Chronoception {
         }
     }
 
+    public static long getPercievedTime(World world, UUID player) {
+        if (world.isClient()) {
+            return world.getTimeOfDay() % 24000L; // should be modified already
+        } else {
+            PlayerTimeData playerData = PlayerStateSaver.getPlayerState(player, world);
+            return (world.getLevelProperties().getTimeOfDay() + (long)playerData.offset) % 24000L; // otherwise calc it here
+        }
+    }
+
     public static long getPercievedLunarTime(LunarWorldView world, PlayerEntity player) {
         if (world.isClient()) {
             return world.getLunarTime() % 192000L; // should be modified already
         } else {
             PlayerTimeData playerData = PlayerStateSaver.getPlayerState(player);
+            return (world.getLunarTime() + (long)playerData.offset) % 192000L; // otherwise calc it here
+        }
+    }
+
+    public static long getPercievedLunarTime(World world, UUID player) {
+        if (world.isClient()) {
+            return world.getLunarTime() % 192000L; // should be modified already
+        } else {
+            PlayerTimeData playerData = PlayerStateSaver.getPlayerState(player, world);
             return (world.getLunarTime() + (long)playerData.offset) % 192000L; // otherwise calc it here
         }
     }
