@@ -2,6 +2,7 @@ package io.github.chromonym.chronoception.client.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import io.github.chromonym.chronoception.Chronoception;
 import io.github.chromonym.chronoception.screenhandlers.TemporalTableScreenHandler;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -12,12 +13,14 @@ import net.minecraft.util.Identifier;
 
 public class TemporalTableScreen extends HandledScreen<TemporalTableScreenHandler> {
 
-    private static final Identifier TEXTURE = Identifier.ofVanilla("textures/gui/container/dispenser.png"); // TODO use a custom texture
+    private static final Identifier TEXTURE = Identifier.of(Chronoception.MOD_ID, "textures/gui/container/temporal_table.png");
     TemporalTableScreenHandler screenHandler;
 
     public TemporalTableScreen(TemporalTableScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         screenHandler = handler;
+        this.backgroundHeight = 139;
+        this.playerInventoryTitleY = this.backgroundHeight - 94;
     }
 
     @Override
@@ -41,7 +44,6 @@ public class TemporalTableScreen extends HandledScreen<TemporalTableScreenHandle
     @Override
     protected void init() {
         super.init();
-        titleX = (backgroundWidth - textRenderer.getWidth(title));
     }
     
 }

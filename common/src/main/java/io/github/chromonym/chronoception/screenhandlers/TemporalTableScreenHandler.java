@@ -29,16 +29,16 @@ public class TemporalTableScreenHandler extends ScreenHandler {
         int m;
         int l;
         // Our inventory
-        this.addSlot(new Slot(inventory, 0, 80, 35));
+        this.addSlot(new TemporalTableSlot(inventory, 0, 80, 21));
         // The player inventory
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + m * 9 + 9, 8 + l * 18, 84 + m * 18));
+                this.addSlot(new Slot(playerInventory, l + m * 9 + 9, 8 + l * 18, 57 + m * 18));
             }
         }
         // The player Hotbar
         for (m = 0; m < 9; ++m) {
-            this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 142));
+            this.addSlot(new Slot(playerInventory, m, 8 + m * 18, 115));
         }
     }
 
