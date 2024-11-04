@@ -11,7 +11,7 @@ authors = "chromonym"
 description = '''
 A Minecraft mod about perception of time (made for ModFest 1.21)
 '''
-#logoFile = "icon.png"
+logoFile = "chronoceptionicon.png"
 displayURL = "https://modrinth.com/mod/chronoception"
 
 [[dependencies.chronoception]]
