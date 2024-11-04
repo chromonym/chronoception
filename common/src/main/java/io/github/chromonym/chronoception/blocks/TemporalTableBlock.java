@@ -91,11 +91,9 @@ public class TemporalTableBlock extends BlockWithEntity {
 
     @Override
     protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return VoxelShapes.union(VoxelShapes.cuboid(0.0f, 0.875f, 0.0f, 1.0f, 1.0f, 1.0f), 
-        VoxelShapes.cuboid(0.0f, 0.0f, 0.0f, 0.125f, 1.0f, 0.125f),
-        VoxelShapes.cuboid(0.0f, 0.0f, 0.875f, 0.125f, 1.0f, 1.0f),
-        VoxelShapes.cuboid(0.875f, 0.0f, 0.0f, 1.0f, 1.0f, 0.125f),
-        VoxelShapes.cuboid(0.875f, 0.0f, 0.875f, 1.0f, 1.0f, 1.0f));
+        return VoxelShapes.union(VoxelShapes.cuboid(0.0f, 0.0f, 0.0f, 1.0f, 0.1875f, 1.0f),
+        VoxelShapes.cuboid(0.125f, 0.1875f, 0.125f, 0.875f, 0.8125, 0.875f),
+        VoxelShapes.cuboid(0.0f, 0.8125f, 0.0f, 1.0f, 1.0f, 1.0f));
     }
     
 }

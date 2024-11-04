@@ -75,7 +75,7 @@ public class TemporalTableScreen extends HandledScreen<TemporalTableScreenHandle
         context.drawTexture(TEXTURE, x+62, y+17, timeX, 0, 10, 10);
         context.drawTexture(TEXTURE, x+62, y+31, moonX, 10, 10, 10);
         if (barHeight > 0) {
-            context.drawTexture(TEXTURE, x+104, y+17+23-barHeight, barX, 20 + 24 - barHeight, 7, 24);
+            context.drawTexture(TEXTURE, x+104, y+17+24-barHeight, barX, 20 + 24 - barHeight, 7, barHeight);
         }
     }
 

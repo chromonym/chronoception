@@ -1,13 +1,12 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "GGG",
-        "P P",
-        "P P"
+        "G",
+        "P"
     ],
     "key": {
         "G": {
-            "item": "chronoception:resynchronous_ghostblock"
+            "tag": "chronoception:timeless_crafting_materials"
         },
         "P": {
             "item": "minecraft:quartz_pillar"
