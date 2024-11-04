@@ -28,6 +28,12 @@ public class TemporalTableBlockEntity extends BlockEntity implements NamedScreen
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
         public int get(int index) {
+            if (index == 1) {
+                return (int)(Chronoception.getPercievedTime(world, recentInteract) % 24000); // should already be %24000 but just in case
+            }
+            if (index == 2) {
+                return ((int)(Chronoception.getPercievedLunarTime(world, recentInteract) / 24000L % 8L + 8L) % 8);
+            }
             return progress;
         }
 
@@ -38,7 +44,7 @@ public class TemporalTableBlockEntity extends BlockEntity implements NamedScreen
 
         @Override
         public int size() {
-            return 1;
+            return 3;
         }
     };
 

@@ -16,7 +16,7 @@ public class TemporalTableScreenHandler extends ScreenHandler {
     PropertyDelegate propertyDelegate;
 
     public TemporalTableScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(1));
+        this(syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(3));
     }
 
     public TemporalTableScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
@@ -44,6 +44,14 @@ public class TemporalTableScreenHandler extends ScreenHandler {
 
     public int getProgress() {
         return propertyDelegate.get(0);
+    }
+
+    public int getLocalTime() {
+        return propertyDelegate.get(1);
+    }
+
+    public int getLunarTime() {
+        return propertyDelegate.get(2);
     }
 
     @Override
