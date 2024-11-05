@@ -29,7 +29,7 @@ public class TemporalTableScreenHandler extends ScreenHandler {
         int m;
         int l;
         // Our inventory
-        this.addSlot(new TemporalTableSlot(inventory, 0, 80, 21));
+        this.addSlot(new Slot(inventory, 0, 80, 21));
         // The player inventory
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {

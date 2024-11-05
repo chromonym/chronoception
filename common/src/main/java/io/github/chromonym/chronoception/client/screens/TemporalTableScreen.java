@@ -50,15 +50,15 @@ public class TemporalTableScreen extends HandledScreen<TemporalTableScreenHandle
         int barX = 176; // y = 20
         long local = (long)screenHandler.getLocalTime();
         int lunar = screenHandler.getLunarTime();
-        if (screenHandler.getSlot(0).getStack().getItem() == Chronoception.TEMPORAL_GEM.get()) {
-            if (Chronoception.CREPUSCULAR.test(local, lunar)) {barX += 7;}
-            else if (Chronoception.NOCTURNAL.test(local, lunar)) {barX += 14;}
-        } else if (screenHandler.getSlot(0).getStack().getItem() == Chronoception.TEMPORAL_DUST.get()) {
+        if (screenHandler.getSlot(0).getStack().getItem() == Chronoception.TEMPORAL_DUST.get()) {
             if (Chronoception.FULL_MOON.test(local, lunar)) {barX += 21;}
             else if (Chronoception.GIBBOUS_MOON.test(local, lunar)) {barX += 28;}
             else if (Chronoception.QUARTER_MOON.test(local, lunar)) {barX += 35;}
             else if (Chronoception.CRESCENT_MOON.test(local, lunar)) {barX += 42;}
             else if (Chronoception.NEW_MOON.test(local, lunar)) {barX += 49;}
+        } else { // TODO somehow make the block know if it's doing a lunar recipe or not. atm it just assume not unless the item is temporal dust
+            if (Chronoception.CREPUSCULAR.test(local, lunar)) {barX += 7;}
+            else if (Chronoception.NOCTURNAL.test(local, lunar)) {barX += 14;}
         }
         if (Chronoception.CREPUSCULAR.test(local, lunar)) {timeX += 10;}
         else if (Chronoception.NOCTURNAL.test(local, lunar)) {timeX += 20;}
