@@ -6,7 +6,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -15,11 +15,11 @@ public class TemporalInfusingRecipe extends BasicEmiRecipe {
 
     private final Text description;
 
-    public TemporalInfusingRecipe(Identifier id, Item input, Item output) {
+    public TemporalInfusingRecipe(Identifier id, Ingredient input, ItemStack output, String type) {
         super(ChronoceptionEmi.TEMPORAL_INFUSING, id, 126, 29);
-        this.inputs.add(EmiIngredient.of(Ingredient.ofItems(input)));
-        this.outputs.add(EmiStack.of(output.getDefaultStack()));
-        this.description = Text.translatable("emi.".concat(id.toShortTranslationKey()).concat(".desc"));
+        this.inputs.add(EmiIngredient.of(input));
+        this.outputs.add(EmiStack.of(output));
+        this.description = Text.translatable("emi.chronoception.temporal.".concat(type));
     }
 
     @Override

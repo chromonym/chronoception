@@ -99,12 +99,12 @@
 
     "tag.item.chronoception.timeless_crafting_materials": "Temporal Materials",
     "emi.category.chronoception.temporal_infusing": "Temporal Infusing",
-    "emi.chronoception./temporal_infusing/diurnal.desc": "During the day",
-    "emi.chronoception./temporal_infusing/crepuscular.desc": "During dawn or dusk",
-    "emi.chronoception./temporal_infusing/nocturnal.desc": "During the night",
-    "emi.chronoception./temporal_infusing/full_moon.desc": "During a full moon",
-    "emi.chronoception./temporal_infusing/gibbous_moon.desc": "During a gibbous moon",
-    "emi.chronoception./temporal_infusing/quarter_moon.desc": "During a quarter moon",
-    "emi.chronoception./temporal_infusing/crescent_moon.desc": "During a crescent moon",
-    "emi.chronoception./temporal_infusing/new_moon.desc": "During a new moon"
+    "emi.chronoception.temporal.day": "During the day",
+    "emi.chronoception.temporal.dusk": "During dawn or dusk",
+    "emi.chronoception.temporal.night": "During the night",
+    "emi.chronoception.temporal.full": "During a full moon",
+    "emi.chronoception.temporal.gibbous": "During a gibbous moon",
+    "emi.chronoception.temporal.quarter": "During a quarter moon",
+    "emi.chronoception.temporal.crescent": "During a crescent moon",
+    "emi.chronoception.temporal.new": "During a new moon"
 }

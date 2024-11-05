@@ -1,0 +1,21 @@
+{
+    "type": "chronoception:moon_recipe",
+    "input": {
+        "item": "chronoception:temporal_dust"
+    },
+    "full": {
+        "id": "chronoception:full_moon_dust"
+    },
+    "gibbous": {
+        "id": "chronoception:gibbous_moon_dust"
+    },
+    "quarter": {
+        "id": "chronoception:quarter_moon_dust"
+    },
+    "crescent": {
+        "id": "chronoception:crescent_moon_dust"
+    },
+    "new": {
+        "id": "chronoception:new_moon_dust"
+    }
+}

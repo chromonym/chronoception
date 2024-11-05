@@ -28,6 +28,10 @@ import io.github.chromonym.chronoception.effects.TimeSetEffect;
 import io.github.chromonym.chronoception.effects.TimeSkipEffect;
 import io.github.chromonym.chronoception.items.StopwatchItem;
 import io.github.chromonym.chronoception.networking.PlayerTimePayload;
+import io.github.chromonym.chronoception.recipes.DayRecipe;
+import io.github.chromonym.chronoception.recipes.DayRecipeSerializer;
+import io.github.chromonym.chronoception.recipes.MoonRecipe;
+import io.github.chromonym.chronoception.recipes.MoonRecipeSerializer;
 import io.github.chromonym.chronoception.screenhandlers.TemporalTableScreenHandler;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -46,6 +50,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemGroup.Row;
 import net.minecraft.potion.Potion;
 import net.minecraft.recipe.BrewingRecipeRegistry;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.resource.featuretoggle.FeatureSet;
@@ -83,6 +89,8 @@ public final class Chronoception {
     public static final DeferredRegister<StatusEffect> STATUS_EFFECTS = DeferredRegister.create(MOD_ID, RegistryKeys.STATUS_EFFECT);
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(MOD_ID, RegistryKeys.POTION);
     public static final DeferredRegister<ScreenHandlerType<?>> SCREEN_HANDLERS = DeferredRegister.create(MOD_ID, RegistryKeys.SCREEN_HANDLER);
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(MOD_ID, RegistryKeys.RECIPE_TYPE);
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(MOD_ID, RegistryKeys.RECIPE_SERIALIZER);
 
     public static final RegistrySupplier<Item> TEMPORAL_GEM = ITEMS.register("temporal_gem", () -> new Item(new Item.Settings()));
     public static final RegistrySupplier<Item> DIURNAL_GEM = ITEMS.register("diurnal_gem", () -> new Item(new Item.Settings()));
@@ -192,6 +200,11 @@ public final class Chronoception {
     public static final RegistrySupplier<BlockItem> TEMPORAL_TABLE_ITEM = ITEMS.register("temporal_table", () -> new BlockItem(TEMPORAL_TABLE.get(), new Item.Settings()));
     public static final RegistrySupplier<ScreenHandlerType<TemporalTableScreenHandler>> TEMPORAL_TABLE_SCREEN_HANDLER = SCREEN_HANDLERS.register("temporal_table", () -> new ScreenHandlerType<TemporalTableScreenHandler>(TemporalTableScreenHandler::new, FeatureSet.empty()));
 
+    public static final RegistrySupplier<RecipeType<DayRecipe>> DAY_RECIPE = RECIPE_TYPES.register("time_recipe", () -> DayRecipe.Type.INSTANCE);
+    public static final RegistrySupplier<RecipeSerializer<DayRecipe>> DAY_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("time_recipe", DayRecipeSerializer::new);
+    public static final RegistrySupplier<RecipeType<MoonRecipe>> MOON_RECIPE = RECIPE_TYPES.register("moon_recipe", () -> MoonRecipe.Type.INSTANCE);
+    public static final RegistrySupplier<RecipeSerializer<MoonRecipe>> MOON_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("moon_recipe", MoonRecipeSerializer::new);
+
     public static final Supplier<ItemGroup> CHRONOCEPTION_TAB = ITEM_GROUPS.register("tab", () -> ItemGroup.create(Row.TOP, 0)
         .displayName(Text.translatable("itemGroup." + MOD_ID + ".tab"))
         .icon(() -> new ItemStack(TRUE_CLOCK.get()))
@@ -240,6 +253,8 @@ public final class Chronoception {
     
     public static void init() {
         SCREEN_HANDLERS.register();
+        RECIPE_TYPES.register();
+        RECIPE_SERIALIZERS.register();
         BLOCKS.register();
         BLOCK_ENTITIES.register();
         ITEMS.register();

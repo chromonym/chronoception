@@ -1,0 +1,15 @@
+{
+    "type": "chronoception:time_recipe",
+    "input": {
+        "item": "chronoception:temporal_gem"
+    },
+    "day": {
+        "id": "chronoception:diurnal_gem"
+    },
+    "dusk": {
+        "id": "chronoception:crepuscular_gem"
+    },
+    "night": {
+        "id": "chronoception:nocturnal_gem"
+    }
+}
